@@ -1,40 +1,183 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>beiwei91</title>
-    <style>
-        #title {
-            background-color: #F596AA;
-            height: 100px;
-        }
-
-        .Title {
-            display: inline-block;
-            color: azure;
-            font-size: 30px;
-            margin-left: 10px;
-            margin-right: 10px;
-            margin-top: 20px;
-        }
-
-        a {
-            text-decoration: none;
-        }
-    </style>
+    <title>北纬91 · beiwei91</title>
+    <meta name="description" content="beiwei91（北纬91）的个人主页：项目、技能与兴趣。专业是地理信息科学，方向是计算机。">
+    <meta name="author" content="beiwei91">
+    <link rel="canonical" href="https://beiwei91.github.io/">
+    <meta name="theme-color" content="#f596aa" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#14171c" media="(prefers-color-scheme: dark)">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:title" content="北纬91 · beiwei91">
+    <meta property="og:description" content="项目、技能与兴趣。专业是地理信息科学，方向是计算机。">
+    <meta property="og:url" content="https://beiwei91.github.io/">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/style.css">
 </head>
 
 <body>
-    <div>
-        <div id="title">
-            <a href="index.html" class="Title">BEIWEI91</a>
-            <a href="https://beiwei91.github.io/myblog/" class = 'Title'>个人博客(点这个)</a>
-            <div class="Title">|</div>
-            <div class="Title">123</div>
+    <a class="skip-link" href="#main">跳到主要内容</a>
+
+    <header class="hero">
+        <div class="wrap">
+            <h1>北纬91 <span class="handle">beiwei91</span></h1>
+            <p class="tagline">专业是地理信息科学，方向是计算机。</p>
+            <p class="lede">
+                本科课程之外，自学了计算机网络、计算机组成原理、操作系统与算法设计；
+                做过空间数据处理与后端接口方向的小项目；
+                平时弹吉他、看动漫、打游戏。
+            </p>
+            <nav class="hero-links" aria-label="页面导航">
+                <a href="#about">关于</a>
+                <a href="#work">项目</a>
+                <a href="#skills">技能</a>
+                <a href="#interests">兴趣</a>
+                <a href="#repos">仓库</a>
+                <a href="https://github.com/beiwei91" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://beiwei91.github.io/myblog/" target="_blank" rel="noopener noreferrer">博客</a>
+            </nav>
         </div>
-    </div>
+    </header>
+
+    <main id="main" class="wrap">
+
+        <section id="about">
+            <h2>关于</h2>
+            <p>
+                在读本科生，专业是地理信息科学，方向是计算机。
+                本科课程之外，我把计算机方向的几门核心课自己补了一遍：
+                数据结构与算法、计算机网络、计算机组成原理、操作系统。
+            </p>
+            <p>
+                做过两个围绕空间数据的小项目：一个是在团队项目里做矢量化数据采集，
+                一个是课程设计里的后端接口与地图可视化。
+            </p>
+            <p class="honest">
+                GIS 我算不上好学生——<strong>操作能上手，理论确实一般</strong>，
+                而且最近都在学计算机的东西，有些操作也生疏了。真正投入的是计算机方向。
+            </p>
+        </section>
+
+        <section id="work">
+            <h2>项目</h2>
+
+            <article class="card">
+                <div class="card-head">
+                    <h3>古村落智慧消防系统</h3>
+                    <span class="meta">2025.09 – 2025.11 · 团队项目</span>
+                </div>
+                <p>
+                    团队项目，我负责<strong>矢量化数据采集</strong>：用 ArcGIS 把古村落的建筑物、
+                    道路等要素描成矢量数据，交给团队继续使用。
+                </p>
+                <ul class="tags">
+                    <li>ArcGIS</li>
+                    <li>矢量化</li>
+                    <li>数据采集</li>
+                </ul>
+            </article>
+
+            <article class="card">
+                <div class="card-head">
+                    <h3>地质灾害分布可视化</h3>
+                    <span class="meta">2025.05 – 2025.06 · 课程设计</span>
+                </div>
+                <p>
+                    课程设计：用 Spring Boot 提供灾害点数据的查询与分类过滤接口，
+                    MySQL 建表、批量导入数千条数据并为查询字段建索引；
+                    用 Leaflet 做地图叠加、ECharts 做统计图表。
+                </p>
+                <ul class="tags">
+                    <li>Spring Boot</li>
+                    <li>MySQL</li>
+                    <li>Leaflet</li>
+                    <li>ECharts</li>
+                </ul>
+            </article>
+
+            <p class="note">
+                两个项目规模都不大：一个是课程设计，一个是团队项目。
+                这里只写我实际负责的部分，重点放在具体做了什么、学到什么。
+            </p>
+        </section>
+
+        <section id="skills">
+            <h2>技能</h2>
+            <dl class="skills">
+                <div>
+                    <dt>空间数据</dt>
+                    <dd>ArcGIS：矢量化、常规空间数据处理</dd>
+                </div>
+                <div>
+                    <dt>编程</dt>
+                    <dd>C / C++：常用语法与数据结构、算法实现</dd>
+                </div>
+                <div>
+                    <dt>后端与数据库</dt>
+                    <dd>Spring Boot 接口开发；MySQL 建表、增删改查与基础索引</dd>
+                </div>
+                <div>
+                    <dt>可视化</dt>
+                    <dd>Leaflet 地图叠加；ECharts 统计图表</dd>
+                </div>
+                <div>
+                    <dt>工具与协作</dt>
+                    <dd>Git、Linux 常用命令；用 ChatGPT / Claude / DeepSeek / Cursor 辅助开发</dd>
+                </div>
+                <div>
+                    <dt>自学</dt>
+                    <dd>计算机网络、计算机组成原理、操作系统、算法设计与分析</dd>
+                </div>
+            </dl>
+        </section>
+
+        <section id="interests">
+            <h2>兴趣</h2>
+            <ul class="interests">
+                <li><span class="emoji" aria-hidden="true">🎸</span> 弹吉他——小学四年级学起，木吉他转电吉他，组过乐队</li>
+                <li><span class="emoji" aria-hidden="true">🎵</span> 音乐：日摇 / J-POP，最喜欢 <strong>Yorushika</strong></li>
+                <li><span class="emoji" aria-hidden="true">📺</span> 日本动漫</li>
+                <li><span class="emoji" aria-hidden="true">🎮</span> 游戏：明日方舟、怪物猎人</li>
+                <li><span class="emoji" aria-hidden="true">☕</span> 咖啡</li>
+            </ul>
+        </section>
+
+        <section id="repos">
+            <h2>我的仓库</h2>
+            <ul class="repos">
+                <li>
+                    <a href="https://github.com/beiwei91/resume-generator" target="_blank" rel="noopener noreferrer">resume-generator</a>
+                    <span class="repo-desc">简历生成器 · JavaScript</span>
+                </li>
+                <li>
+                    <a href="https://github.com/beiwei91/lasProcess" target="_blank" rel="noopener noreferrer">lasProcess</a>
+                    <span class="repo-desc">C++</span>
+                </li>
+                <li>
+                    <a href="https://github.com/beiwei91/myblog" target="_blank" rel="noopener noreferrer">myblog</a>
+                    <span class="repo-desc">博客源码 · HTML</span>
+                </li>
+                <li>
+                    <a href="https://github.com/beiwei91/beiwei91.github.io" target="_blank" rel="noopener noreferrer">beiwei91.github.io</a>
+                    <span class="repo-desc">本站源码</span>
+                </li>
+            </ul>
+        </section>
+
+    </main>
+
+    <footer class="wrap">
+        <p>
+            <a href="https://github.com/beiwei91" target="_blank" rel="noopener noreferrer">github.com/beiwei91</a>
+            ·
+            <a href="https://beiwei91.github.io/myblog/" target="_blank" rel="noopener noreferrer">博客</a>
+        </p>
+        <p class="note">本站只放我愿意公开的内容，不含个人信息。© beiwei91</p>
+    </footer>
 
 </body>
 

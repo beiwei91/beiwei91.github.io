@@ -1,0 +1,434 @@
+/* 北纬91 · 个人主页
+   零依赖：无外部字体、无 CDN、无脚本。
+   配色沿用粉色强调 #F596AA；浅色为默认，深色跟随系统（prefers-color-scheme）。 */
+
+:root {
+    color-scheme: light dark;
+
+    --pink: #f596aa;
+    --pink-soft: #fdeef1;
+    --accent-text: #c9415e; /* 浅色底上可读的强调文字色 */
+    --focus: #c9415e;
+
+    --ink: #23272e;
+    --ink-soft: #5b6472;
+    --ink-faint: #6b7385; /* 13px 小字也要 ≥ 4.5:1 */
+
+    --line: #e8eaee;
+    --bg: #ffffff;
+    --bg-soft: #fafbfc;
+    --surface: #ffffff;
+
+    --radius: 12px;
+    --maxw: 760px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+    overflow-wrap: break-word;
+}
+
+.wrap {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+a {
+    color: var(--accent-text);
+}
+
+:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* 键盘用户跳过导航 */
+.skip-link {
+    position: absolute;
+    top: 0;
+    left: -9999px;
+    z-index: 10;
+    padding: 10px 16px;
+    border: 1px solid var(--line);
+    border-radius: 0 0 var(--radius) 0;
+    background: var(--surface);
+    color: var(--ink);
+    text-decoration: none;
+}
+
+.skip-link:focus {
+    left: 0;
+}
+
+/* ---------- 头部 ---------- */
+
+.hero {
+    padding: 56px 0 40px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, var(--pink-soft), var(--bg));
+}
+
+.hero h1 {
+    margin: 0 0 8px;
+    font-size: 34px;
+    letter-spacing: 0.5px;
+}
+
+.hero h1 .handle {
+    display: inline-block;
+    color: var(--ink-faint);
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    vertical-align: middle;
+}
+
+.tagline {
+    margin: 0 0 16px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.lede {
+    max-width: 60ch;
+    margin: 0 0 24px;
+    color: var(--ink-soft);
+}
+
+.hero-links a {
+    display: inline-block;
+    margin: 0 8px 8px 0;
+    padding: 6px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 14px;
+    text-decoration: none;
+    transition: border-color .15s, color .15s, background .15s;
+}
+
+.hero-links a:hover {
+    border-color: var(--pink);
+    background: var(--pink-soft);
+    color: var(--accent-text);
+}
+
+/* ---------- 区块 ---------- */
+
+main section {
+    padding: 40px 0 8px;
+}
+
+main section + section {
+    border-top: 1px solid var(--line);
+}
+
+h2 {
+    margin: 0 0 18px;
+    font-size: 20px;
+    letter-spacing: 0.5px;
+}
+
+h2::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 10px;
+    border-radius: 50%;
+    background: var(--pink);
+    vertical-align: middle;
+}
+
+h3 {
+    margin: 0;
+    font-size: 17px;
+}
+
+p {
+    margin: 0 0 14px;
+}
+
+.note {
+    color: var(--ink-soft);
+    font-size: 15px;
+}
+
+.honest {
+    padding: 12px 16px;
+    border-left: 3px solid var(--pink);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    background: var(--bg-soft);
+    color: var(--ink-soft);
+    font-size: 15px;
+}
+
+/* ---------- 项目卡片 ---------- */
+
+.card {
+    margin-bottom: 18px;
+    padding: 20px 22px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-soft);
+}
+
+.card-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.card p:last-child {
+    margin-bottom: 0;
+}
+
+.meta {
+    color: var(--ink-faint);
+    font-size: 13px;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tags li {
+    padding: 3px 10px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--ink-soft);
+    font-size: 12.5px;
+}
+
+/* ---------- 技能 ---------- */
+
+.skills {
+    margin: 0;
+}
+
+.skills > div {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--line);
+}
+
+.skills > div:last-child {
+    border-bottom: none;
+}
+
+.skills dt {
+    color: var(--ink);
+    font-size: 14.5px;
+    font-weight: 600;
+}
+
+.skills dd {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 15px;
+}
+
+/* ---------- 兴趣 ---------- */
+
+.interests {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.interests li {
+    padding: 8px 0;
+    color: var(--ink-soft);
+}
+
+.interests .emoji {
+    display: inline-block;
+    width: 26px;
+}
+
+/* ---------- 仓库 ---------- */
+
+.repos {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.repos li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--line);
+}
+
+.repos li:last-child {
+    border-bottom: none;
+}
+
+.repos a {
+    color: var(--accent-text);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.repos a:hover {
+    text-decoration: underline;
+}
+
+.repo-desc {
+    color: var(--ink-faint);
+    font-size: 13.5px;
+}
+
+/* ---------- 页脚 ---------- */
+
+footer {
+    margin-top: 40px;
+    padding: 28px 24px 48px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-faint);
+    font-size: 14px;
+}
+
+footer a {
+    color: var(--ink-soft);
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: var(--accent-text);
+}
+
+footer .note {
+    margin: 6px 0 0;
+    font-size: 13px;
+}
+
+/* ---------- 404 ---------- */
+
+.notfound {
+    padding: 88px 24px 120px;
+}
+
+.notfound .code {
+    margin: 0;
+    color: var(--ink-faint);
+    font-size: 15px;
+    letter-spacing: 2px;
+}
+
+.notfound h1 {
+    margin: 4px 0 16px;
+    font-size: 32px;
+}
+
+.notfound p {
+    max-width: 52ch;
+    color: var(--ink-soft);
+}
+
+.notfound .back a {
+    display: inline-block;
+    margin: 8px 8px 0 0;
+    padding: 8px 16px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.notfound .back a:hover {
+    border-color: var(--pink);
+    background: var(--pink-soft);
+    color: var(--accent-text);
+}
+
+/* ---------- 窄屏 ---------- */
+
+@media (max-width: 600px) {
+    .hero {
+        padding: 40px 0 28px;
+    }
+
+    .hero h1 {
+        font-size: 28px;
+    }
+
+    .hero h1 .handle {
+        display: block;
+        margin-top: 6px;
+    }
+
+    .skills > div {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+
+    .notfound {
+        padding: 64px 24px 96px;
+    }
+
+    .notfound h1 {
+        font-size: 26px;
+    }
+}
+
+/* ---------- 减少动效 ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}
+
+/* ---------- 深色模式 ---------- */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+
+        --pink-soft: #241a1e;
+        --accent-text: #f596aa;
+        --focus: #f596aa;
+
+        --ink: #e8eaee;
+        --ink-soft: #aab2c0;
+        --ink-faint: #7f8896;
+
+        --line: #2b3038;
+        --bg: #14171c;
+        --bg-soft: #1b1f26;
+        --surface: #1b1f26;
+    }
+}
