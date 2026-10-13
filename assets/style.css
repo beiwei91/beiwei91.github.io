@@ -92,7 +92,7 @@ a {
 
 .hero h1 .handle {
     display: inline-block;
-    color: var(--ink-faint);
+    color: var(--ink-soft); /* 浅色 5.98:1（hero 顶部渐变处 5.32:1），深色 7.74:1 */
     font-size: 14px;
     font-weight: 400;
     letter-spacing: 1px;
@@ -127,7 +127,7 @@ a {
 .hero-links a:hover {
     border-color: var(--pink);
     background: var(--pink-soft);
-    color: var(--accent-text);
+    color: var(--ink); /* hover 时改用 --ink：浅色 13.33:1，深色 14.04:1 */
 }
 
 /* ---------- 区块 ---------- */
@@ -167,15 +167,6 @@ p {
 }
 
 .note {
-    color: var(--ink-soft);
-    font-size: 15px;
-}
-
-.honest {
-    padding: 12px 16px;
-    border-left: 3px solid var(--pink);
-    border-radius: 0 var(--radius) var(--radius) 0;
-    background: var(--bg-soft);
     color: var(--ink-soft);
     font-size: 15px;
 }
