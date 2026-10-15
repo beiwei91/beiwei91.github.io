@@ -1,25 +1,29 @@
 /* 北纬91 · 个人主页
    零依赖：无外部字体、无 CDN、无脚本。
-   配色沿用粉色强调 #F596AA；浅色为默认，深色跟随系统（prefers-color-scheme）。 */
+   视觉方向：克制、留白、低装饰。粉色 #f596aa 只保留在标题竖条一处强调；
+   其余（含 hover）全部走中性色。深色模式是真正的深色（#0d0f12），不是简单反色。 */
 
 :root {
     color-scheme: light dark;
 
+    /* 唯一的粉色强调：#f596aa。只用于 h2::before 那一个 3px 竖条。 */
     --pink: #f596aa;
-    --pink-soft: #fdeef1;
-    --accent-text: #c9415e; /* 浅色底上可读的强调文字色 */
-    --focus: #c9415e;
+    /* 选中文本的淡粉底（不与页面其他元素争强调） */
+    --pink-soft: #fbe9ed;
 
-    --ink: #23272e;
-    --ink-soft: #5b6472;
-    --ink-faint: #6b7385; /* 13px 小字也要 ≥ 4.5:1 */
+    --ink: #1a1d21;        /* 正文 / 标题（16.91:1 on #fff） */
+    --ink-soft: #565e69;   /* 次级正文（6.56:1 on #fff） */
+    --ink-faint: #676f7b;  /* 13px 小字（5.08:1 on #fff） */
+    --muted: #8b929c;      /* 非文字装饰：细线、圆点、短横线 */
 
-    --line: #e8eaee;
+    --line: #e2e5ea;       /* 常规 1px 细线（卡片边框、虚线分隔） */
+    --rule: #d5d9e0;       /* 区块上方分隔线 */
+    --tag-bg: rgba(26, 29, 33, .045); /* 元数据标签极淡底 */
     --bg: #ffffff;
-    --bg-soft: #fafbfc;
     --surface: #ffffff;
+    --focus: #1a1d21;
 
-    --radius: 12px;
+    --radius: 3px;
     --maxw: 760px;
 }
 
@@ -38,24 +42,48 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
         "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", sans-serif;
     font-size: 16px;
-    line-height: 1.75;
+    line-height: 1.8;
     overflow-wrap: break-word;
+}
+
+::selection {
+    background: var(--pink-soft);
+    color: var(--ink);
 }
 
 .wrap {
     max-width: var(--maxw);
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 28px;
+}
+
+/* 标题与正文同一套 sans 栈：跨平台一致优先于衬线优雅
+   （serif 在 Windows 会落到 SimSun，细小偏旧） */
+h1,
+h2,
+h3 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", sans-serif;
+    font-weight: 600;
 }
 
 a {
-    color: var(--accent-text);
+    color: var(--ink);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--muted);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
 }
 
 :focus-visible {
     outline: 2px solid var(--focus);
-    outline-offset: 2px;
-    border-radius: 4px;
+    outline-offset: 3px;
+    border-radius: 2px;
 }
 
 /* 键盘用户跳过导航 */
@@ -66,7 +94,7 @@ a {
     z-index: 10;
     padding: 10px 16px;
     border: 1px solid var(--line);
-    border-radius: 0 0 var(--radius) 0;
+    border-radius: 0 0 var(--radius) var(--radius);
     background: var(--surface);
     color: var(--ink);
     text-decoration: none;
@@ -76,83 +104,89 @@ a {
     left: 0;
 }
 
-/* ---------- 头部 ---------- */
+/* ---------- 头部：纯色底，无渐变 ---------- */
 
 .hero {
-    padding: 56px 0 40px;
-    border-bottom: 1px solid var(--line);
-    background: linear-gradient(180deg, var(--pink-soft), var(--bg));
+    padding: 88px 0 56px;
+    border-bottom: 1px solid var(--rule);
+    background: var(--bg);
 }
 
 .hero h1 {
-    margin: 0 0 8px;
-    font-size: 34px;
-    letter-spacing: 0.5px;
+    margin: 0 0 14px;
+    font-size: clamp(30px, 5.6vw, 38px);
+    line-height: 1.2;
+    letter-spacing: -0.012em;
 }
 
 .hero h1 .handle {
     display: inline-block;
-    color: var(--ink-soft); /* 浅色 5.98:1（hero 顶部渐变处 5.32:1），深色 7.74:1 */
-    font-size: 14px;
+    margin-left: 12px;
+    color: var(--ink-faint);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", sans-serif;
+    font-size: 13px;
     font-weight: 400;
-    letter-spacing: 1px;
+    letter-spacing: 0.12em;
     vertical-align: middle;
 }
 
 .tagline {
-    margin: 0 0 16px;
-    font-size: 18px;
-    font-weight: 600;
+    margin: 0 0 22px;
+    color: var(--ink);
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
 }
 
 .lede {
-    max-width: 60ch;
-    margin: 0 0 24px;
+    max-width: 64ch;
+    margin: 0 0 30px;
     color: var(--ink-soft);
+    line-height: 1.85;
 }
 
+/* 导航：纯文字，无药丸、无边框 */
 .hero-links a {
     display: inline-block;
-    margin: 0 8px 8px 0;
-    padding: 6px 14px;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    background: var(--surface);
-    color: var(--ink);
-    font-size: 14px;
+    margin: 0 18px 6px 0;
+    padding: 0;
+    color: var(--ink-soft);
+    font-size: 13px;
+    letter-spacing: 0.1em;
     text-decoration: none;
-    transition: border-color .15s, color .15s, background .15s;
+    border-bottom: 1px solid transparent;
+    transition: color .15s, border-color .15s;
 }
 
 .hero-links a:hover {
-    border-color: var(--pink);
-    background: var(--pink-soft);
-    color: var(--ink); /* hover 时改用 --ink：浅色 13.33:1，深色 14.04:1 */
+    color: var(--ink);
+    border-bottom-color: var(--muted);
+    text-decoration: none;
 }
 
 /* ---------- 区块 ---------- */
 
 main section {
-    padding: 40px 0 8px;
-}
-
-main section + section {
-    border-top: 1px solid var(--line);
+    padding: 56px 0 8px;
+    border-top: 1px solid var(--rule);
 }
 
 h2 {
-    margin: 0 0 18px;
-    font-size: 20px;
-    letter-spacing: 0.5px;
+    margin: 0 0 26px;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
 }
 
+/* 全页唯一一处粉色强调：编辑排版的竖条，不是项目符号 */
 h2::before {
     content: "";
     display: inline-block;
-    width: 8px;
-    height: 8px;
+    width: 3px;
+    height: 0.95em;
     margin-right: 10px;
-    border-radius: 50%;
+    border-radius: 2px;
     background: var(--pink);
     vertical-align: middle;
 }
@@ -160,10 +194,12 @@ h2::before {
 h3 {
     margin: 0;
     font-size: 17px;
+    letter-spacing: 0;
 }
 
 p {
-    margin: 0 0 14px;
+    margin: 0 0 16px;
+    max-width: 66ch;
 }
 
 .note {
@@ -171,21 +207,26 @@ p {
     font-size: 15px;
 }
 
-/* ---------- 项目卡片 ---------- */
+/* ---------- 项目卡片：纯色底 + 1px 细边框，无阴影 ---------- */
 
 .card {
-    margin-bottom: 18px;
-    padding: 20px 22px;
+    margin-bottom: 14px;
+    padding: 22px 24px;
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    background: var(--bg-soft);
+    background: var(--surface);
+    transition: border-color .15s;
+}
+
+.card:hover {
+    border-color: var(--rule); /* 只让边框略深一点，150ms */
 }
 
 .card-head {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 10px;
+    gap: 4px 12px;
     margin-bottom: 10px;
 }
 
@@ -193,27 +234,30 @@ p {
     margin-bottom: 0;
 }
 
+/* 小标签：字距拉开，弱化灰但保持 ≥4.5:1 */
 .meta {
     color: var(--ink-faint);
     font-size: 13px;
+    letter-spacing: 0.09em;
 }
 
 .tags {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin: 12px 0 0;
+    margin: 14px 0 0;
     padding: 0;
     list-style: none;
 }
 
+/* 元数据标签：无边框 + 极淡底，不再像输入框 */
 .tags li {
-    padding: 3px 10px;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    background: var(--surface);
-    color: var(--ink-soft);
-    font-size: 12.5px;
+    padding: 2px 9px;
+    border-radius: var(--radius);
+    background: var(--tag-bg);
+    color: var(--ink-faint);
+    font-size: 12px;
+    letter-spacing: 0.06em;
 }
 
 /* ---------- 技能 ---------- */
@@ -225,8 +269,8 @@ p {
 .skills > div {
     display: grid;
     grid-template-columns: 130px 1fr;
-    gap: 12px;
-    padding: 12px 0;
+    gap: 16px;
+    padding: 14px 0;
     border-bottom: 1px dashed var(--line);
 }
 
@@ -236,17 +280,18 @@ p {
 
 .skills dt {
     color: var(--ink);
-    font-size: 14.5px;
+    font-size: 14px;
     font-weight: 600;
 }
 
 .skills dd {
     margin: 0;
+    max-width: 62ch;
     color: var(--ink-soft);
     font-size: 15px;
 }
 
-/* ---------- 兴趣 ---------- */
+/* ---------- 兴趣：无 emoji、无前导标记，只靠行距分隔 ---------- */
 
 .interests {
     margin: 0;
@@ -255,13 +300,9 @@ p {
 }
 
 .interests li {
-    padding: 8px 0;
+    padding: 7px 0;
     color: var(--ink-soft);
-}
-
-.interests .emoji {
-    display: inline-block;
-    width: 26px;
+    line-height: 1.8;
 }
 
 /* ---------- 仓库 ---------- */
@@ -276,8 +317,8 @@ p {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 10px;
-    padding: 10px 0;
+    gap: 12px;
+    padding: 12px 0;
     border-bottom: 1px dashed var(--line);
 }
 
@@ -286,28 +327,32 @@ p {
 }
 
 .repos a {
-    color: var(--accent-text);
+    color: var(--ink);
     font-weight: 600;
     text-decoration: none;
 }
 
 .repos a:hover {
     text-decoration: underline;
+    text-decoration-color: var(--muted);
+    text-underline-offset: 3px;
 }
 
 .repo-desc {
     color: var(--ink-faint);
-    font-size: 13.5px;
+    font-size: 13px;
+    letter-spacing: 0.08em;
 }
 
 /* ---------- 页脚 ---------- */
 
 footer {
-    margin-top: 40px;
-    padding: 28px 24px 48px;
-    border-top: 1px solid var(--line);
+    margin-top: 64px;
+    padding: 28px 0 56px; /* 左右 padding 交给 .wrap，避免叠加 */
+    border-top: 1px solid var(--rule);
     color: var(--ink-faint);
-    font-size: 14px;
+    font-size: 13px;
+    letter-spacing: 0.06em;
 }
 
 footer a {
@@ -316,69 +361,87 @@ footer a {
 }
 
 footer a:hover {
-    color: var(--accent-text);
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--muted);
+    text-underline-offset: 3px;
 }
 
 footer .note {
-    margin: 6px 0 0;
+    margin: 8px 0 0;
     font-size: 13px;
+    color: var(--ink-faint);
 }
 
 /* ---------- 404 ---------- */
 
 .notfound {
-    padding: 88px 24px 120px;
+    padding: 132px 0 160px; /* 左右 padding 交给 .wrap */
 }
 
 .notfound .code {
     margin: 0;
     color: var(--ink-faint);
-    font-size: 15px;
-    letter-spacing: 2px;
+    font-size: 13px;
+    letter-spacing: 0.24em;
 }
 
 .notfound h1 {
-    margin: 4px 0 16px;
-    font-size: 32px;
+    margin: 10px 0 18px;
+    font-size: clamp(28px, 5vw, 34px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
 }
 
 .notfound p {
     max-width: 52ch;
     color: var(--ink-soft);
+    line-height: 1.85;
+}
+
+.notfound .back {
+    margin-top: 26px;
 }
 
 .notfound .back a {
     display: inline-block;
-    margin: 8px 8px 0 0;
-    padding: 8px 16px;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    background: var(--surface);
-    color: var(--ink);
-    font-size: 14px;
+    margin: 0 22px 8px 0;
+    padding: 0;
+    border-bottom: 1px solid transparent;
+    color: var(--ink-soft);
+    font-size: 13px;
+    letter-spacing: 0.1em;
     text-decoration: none;
+    transition: color .15s, border-color .15s;
 }
 
 .notfound .back a:hover {
-    border-color: var(--pink);
-    background: var(--pink-soft);
-    color: var(--accent-text);
+    color: var(--ink);
+    border-bottom-color: var(--muted);
 }
 
 /* ---------- 窄屏 ---------- */
 
 @media (max-width: 600px) {
-    .hero {
-        padding: 40px 0 28px;
+    .wrap {
+        padding: 0 22px;
     }
 
-    .hero h1 {
-        font-size: 28px;
+    .hero {
+        padding: 56px 0 40px;
     }
 
     .hero h1 .handle {
         display: block;
-        margin-top: 6px;
+        margin: 8px 0 0;
+    }
+
+    main section {
+        padding: 40px 0 4px;
+    }
+
+    .card {
+        padding: 18px 18px;
     }
 
     .skills > div {
@@ -387,11 +450,7 @@ footer .note {
     }
 
     .notfound {
-        padding: 64px 24px 96px;
-    }
-
-    .notfound h1 {
-        font-size: 26px;
+        padding: 88px 0 112px;
     }
 }
 
@@ -403,23 +462,25 @@ footer .note {
     }
 }
 
-/* ---------- 深色模式 ---------- */
+/* ---------- 深色模式：真正的深色底 ---------- */
 
 @media (prefers-color-scheme: dark) {
     :root {
         color-scheme: dark;
 
-        --pink-soft: #241a1e;
-        --accent-text: #f596aa;
-        --focus: #f596aa;
+        --pink: #f0a8b8;
+        --pink-soft: #2a1d22;
 
-        --ink: #e8eaee;
-        --ink-soft: #aab2c0;
-        --ink-faint: #7f8896;
+        --ink: #e9ebef;        /* 16.08:1 on #0d0f12 */
+        --ink-soft: #a8b0bc;   /* 8.77:1 on #0d0f12 */
+        --ink-faint: #9099a6;  /* 6.67:1 on #0d0f12 */
+        --muted: #5f6772;
 
-        --line: #2b3038;
-        --bg: #14171c;
-        --bg-soft: #1b1f26;
-        --surface: #1b1f26;
+        --line: #262b33;
+        --rule: #313741;
+        --tag-bg: rgba(233, 235, 239, .06);
+        --bg: #0d0f12;
+        --surface: #0d0f12;
+        --focus: #f0a8b8;
     }
 }
