@@ -19,6 +19,8 @@
     --line: #e2e5ea;       /* 常规 1px 细线（卡片边框、虚线分隔） */
     --rule: #d5d9e0;       /* 区块上方分隔线 */
     --tag-bg: rgba(26, 29, 33, .045); /* 元数据标签极淡底 */
+    --tag-bg-strong: rgba(26, 29, 33, .055); /* 标签 hover 底（再深会让 12px 灰字跌破 4.5:1） */
+    --wash: rgba(26, 29, 33, .025); /* 仓库行 hover 极淡底 */
     --bg: #ffffff;
     --surface: #ffffff;
     --focus: #1a1d21;
@@ -70,14 +72,33 @@ h3 {
 a {
     color: var(--ink);
     text-decoration: none;
+    position: relative;
+    display: inline-block;
+}
+
+/* 链接下划线不用 text-decoration 跳动，而是 ::after 从左侧「画」出来（260ms） */
+a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 1px;
+    width: 100%;
+    height: 1px;
+    background: var(--muted);
+    transform: scaleX(0);
+    transform-origin: left;
+    opacity: 0;
+    transition: transform .26s ease-out, opacity .26s ease-out;
 }
 
 a:hover {
     color: var(--ink);
-    text-decoration: underline;
-    text-decoration-color: var(--muted);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 3px;
+}
+
+a:hover::after,
+a:focus-visible::after {
+    transform: scaleX(1);
+    opacity: 1;
 }
 
 :focus-visible {
@@ -89,6 +110,7 @@ a:hover {
 /* 键盘用户跳过导航 */
 .skip-link {
     position: absolute;
+    display: block;
     top: 0;
     left: -9999px;
     z-index: 10;
@@ -104,12 +126,73 @@ a:hover {
     left: 0;
 }
 
-/* ---------- 头部：纯色底，无渐变 ---------- */
+/* ---------- 进度线 / 进场动效（全部挂在 html.js 下，无 JS 时不存在） ---------- */
+
+/* 刚滚到顶时 scaleX(0) 不可见；粉色强调的第二处用法，仅此一条线 */
+html.js .progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 20;
+    width: 100%;
+    height: 2px;
+    background: var(--pink);
+    transform: scaleX(0);
+    transform-origin: left;
+    pointer-events: none;
+}
+
+@keyframes fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* hero 进场：单条 520ms；标题 → 定位 → 正文 → 导航 错开 70ms，最后一档收在 180ms
+   使总时窗 180 + 520 = 700ms，不越 700ms 上限 */
+html.js .fade-up {
+    animation: fade-up .52s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+html.js .tagline {
+    animation-delay: 70ms;
+}
+
+html.js .lede {
+    animation-delay: 140ms;
+}
+
+html.js .hero-links {
+    animation-delay: 180ms;
+}
+
+/* 滚动进场：460ms，translateY(10px) → 0，只触发一次（JS unobserve） */
+html.js .reveal {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity .46s cubic-bezier(0.22, 0.61, 0.36, 1),
+        transform .46s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+html.js .reveal.is-in {
+    opacity: 1;
+    transform: none;
+}
+
+/* ---------- 头部：纯色底，局部极淡粉色光晕（无可见边界） ---------- */
 
 .hero {
     padding: 88px 0 56px;
     border-bottom: 1px solid var(--rule);
     background: var(--bg);
+    background-image: radial-gradient(120% 92% at 50% -14%,
+            rgba(245, 150, 170, .07), rgba(245, 150, 170, 0) 68%);
 }
 
 .hero h1 {
@@ -146,7 +229,7 @@ a:hover {
     line-height: 1.85;
 }
 
-/* 导航：纯文字，无药丸、无边框 */
+/* 导航：纯文字，无药丸、无边框；下划线走通用 a::after 的「画出」动效 */
 .hero-links a {
     display: inline-block;
     margin: 0 18px 6px 0;
@@ -155,14 +238,11 @@ a:hover {
     font-size: 13px;
     letter-spacing: 0.1em;
     text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: color .15s, border-color .15s;
+    transition: color .18s ease-out;
 }
 
 .hero-links a:hover {
     color: var(--ink);
-    border-bottom-color: var(--muted);
-    text-decoration: none;
 }
 
 /* ---------- 区块 ---------- */
@@ -207,7 +287,7 @@ p {
     font-size: 15px;
 }
 
-/* ---------- 项目卡片：纯色底 + 1px 细边框，无阴影 ---------- */
+/* ---------- 项目卡片：纯色底 + 1px 细边框 ---------- */
 
 .card {
     margin-bottom: 14px;
@@ -215,11 +295,14 @@ p {
     border: 1px solid var(--line);
     border-radius: var(--radius);
     background: var(--surface);
-    transition: border-color .15s;
+    transition: transform .18s ease-out, border-color .18s ease-out, box-shadow .18s ease-out;
 }
 
+/* hover：上浮 2px + 边框变深 + 极浅阴影（180ms） */
 .card:hover {
-    border-color: var(--rule); /* 只让边框略深一点，150ms */
+    transform: translateY(-2px);
+    border-color: var(--rule);
+    box-shadow: 0 6px 20px rgba(26, 29, 33, .06);
 }
 
 .card-head {
@@ -250,7 +333,7 @@ p {
     list-style: none;
 }
 
-/* 元数据标签：无边框 + 极淡底，不再像输入框 */
+/* 元数据标签：无边框 + 极淡底；hover 只加深底，不缩放 */
 .tags li {
     padding: 2px 9px;
     border-radius: var(--radius);
@@ -258,6 +341,11 @@ p {
     color: var(--ink-faint);
     font-size: 12px;
     letter-spacing: 0.06em;
+    transition: background-color .18s ease-out;
+}
+
+.tags li:hover {
+    background: var(--tag-bg-strong);
 }
 
 /* ---------- 技能 ---------- */
@@ -320,6 +408,13 @@ p {
     gap: 12px;
     padding: 12px 0;
     border-bottom: 1px dashed var(--line);
+    transition: background-color .18s ease-out;
+}
+
+/* hover：整行极淡底 wash，用内阴影模拟左右外扩的 padding，不造成布局位移 */
+.repos li:hover {
+    background-color: var(--wash);
+    box-shadow: -12px 0 0 var(--wash), 12px 0 0 var(--wash);
 }
 
 .repos li:last-child {
@@ -329,13 +424,6 @@ p {
 .repos a {
     color: var(--ink);
     font-weight: 600;
-    text-decoration: none;
-}
-
-.repos a:hover {
-    text-decoration: underline;
-    text-decoration-color: var(--muted);
-    text-underline-offset: 3px;
 }
 
 .repo-desc {
@@ -357,14 +445,10 @@ footer {
 
 footer a {
     color: var(--ink-soft);
-    text-decoration: none;
 }
 
 footer a:hover {
     color: var(--ink);
-    text-decoration: underline;
-    text-decoration-color: var(--muted);
-    text-underline-offset: 3px;
 }
 
 footer .note {
@@ -407,17 +491,15 @@ footer .note {
     display: inline-block;
     margin: 0 22px 8px 0;
     padding: 0;
-    border-bottom: 1px solid transparent;
     color: var(--ink-soft);
     font-size: 13px;
     letter-spacing: 0.1em;
     text-decoration: none;
-    transition: color .15s, border-color .15s;
+    transition: color .18s ease-out;
 }
 
 .notfound .back a:hover {
     color: var(--ink);
-    border-bottom-color: var(--muted);
 }
 
 /* ---------- 窄屏 ---------- */
@@ -454,11 +536,33 @@ footer .note {
     }
 }
 
-/* ---------- 减少动效 ---------- */
+/* ---------- 减少动效：关掉全部进场 / 滚动 / hover 位移 / 进度线，内容默认可见 ---------- */
+/* 这段刻意放在文件最后：与上面同样 specificity 的规则靠顺序取胜 */
 
 @media (prefers-reduced-motion: reduce) {
-    * {
+
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
         transition: none !important;
+        scroll-behavior: auto !important;
+    }
+
+    html.js .fade-up,
+    html.js .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    /* 进度线在 JS 侧就不会被创建；这里再兜一层 */
+    html.js .progress {
+        display: none !important;
+    }
+
+    html.js .card:hover {
+        transform: none !important;
+        box-shadow: none !important;
     }
 }
 
@@ -479,8 +583,20 @@ footer .note {
         --line: #262b33;
         --rule: #313741;
         --tag-bg: rgba(233, 235, 239, .06);
+        --tag-bg-strong: rgba(233, 235, 239, .09);
+        --wash: rgba(233, 235, 239, .035);
         --bg: #0d0f12;
         --surface: #0d0f12;
         --focus: #f0a8b8;
+    }
+
+    /* 深色下 hero 光晕再淡一点，避免在近黑底上出现可见色块 */
+    .hero {
+        background-image: radial-gradient(120% 92% at 50% -14%,
+                rgba(240, 168, 184, .06), rgba(240, 168, 184, 0) 68%);
+    }
+
+    .card:hover {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, .4);
     }
 }
