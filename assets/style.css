@@ -12,7 +12,7 @@
     /* 选中文本的淡粉底（不与页面其他元素争强调） */
     --pink-soft: #fbe9ed;
     /* 粉色辉光：只用于装饰线/光斑，不用于文字 */
-    --pink-glow: rgba(245, 150, 170, .45);
+    --pink-glow: rgba(245, 150, 170, .28);
 
     --ink: #1a1d21;        /* 正文 / 标题（16.91:1 on #fff） */
     --ink-soft: #565e69;   /* 次级正文（6.56:1 on #fff） */
@@ -21,14 +21,14 @@
 
     --line: #e2e5ea;       /* 常规 1px 细线（卡片边框、虚线分隔） */
     --rule: #d5d9e0;       /* 区块上方分隔线 */
-    --tag-bg: rgba(26, 29, 33, .045);        /* 元数据标签极淡底 */
-    --tag-bg-strong: rgba(26, 29, 33, .055); /* 标签 hover 底（再深会让 12px 灰字跌破 4.5:1） */
+    --tag-bg: #f5f5f5;                       /* 元数据标签底：用不透明色，光斑不会透上来 */
+    --tag-bg-strong: #f2f3f3;                /* 标签 hover 底（再深会让 12px 灰字跌破 4.5:1） */
     --wash: rgba(26, 29, 33, .025);          /* 仓库行 hover 极淡底 */
-    --grid: rgba(26, 29, 33, .05);           /* hero 极淡网格线 */
+    --grid: rgba(26, 29, 33, .04);           /* hero 极淡网格线 */
     --spot: rgba(245, 150, 170, .13);        /* 卡片跟随鼠标的光斑 */
     --bg: #ffffff;
     --surface: #ffffff;
-    --bar-bg: rgba(255, 255, 255, .86);      /* 顶栏滚动后的半透明底 */
+    --bar-bg: rgba(255, 255, 255, .90);     /* 顶栏滚动后的半透明底 */
     --focus: #1a1d21;
 
     --bar-h: 52px;
@@ -313,7 +313,7 @@ html.js .reveal.is-in {
         radial-gradient(120% 92% at 50% -14%, rgba(245, 150, 170, .10), rgba(245, 150, 170, 0) 66%),
         linear-gradient(to right, var(--grid) 1px, transparent 1px),
         linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
-    background-size: auto, 64px 64px, 64px 64px;
+    background-size: auto, 80px 80px, 80px 80px;
     -webkit-mask-image: linear-gradient(to bottom, #000 52%, transparent 96%);
     mask-image: linear-gradient(to bottom, #000 52%, transparent 96%);
 }
@@ -382,7 +382,7 @@ h2::before {
     margin-right: 10px;
     border-radius: 2px;
     background: var(--pink);
-    box-shadow: 0 0 12px var(--pink-glow);
+    box-shadow: 0 0 8px var(--pink-glow);
     vertical-align: middle;
 }
 
@@ -427,14 +427,11 @@ p {
     font-size: 15px;
 }
 
-/* ---------- 项目卡片：纯色底 + 1px 细边框 + 右上角编号 ---------- */
-
-#work {
-    counter-reset: card 0;
-}
+/* ---------- 项目卡片：纯色底 + 1px 细边框 ---------- */
 
 .card {
     position: relative;
+    isolation: isolate;   /* 让 ::after 的负 z-index 只在本卡片内生效 */
     overflow: hidden;
     /* 光斑默认在中心；JS 在 pointermove 时更新成鼠标坐标 */
     --mx: 50%;
@@ -447,11 +444,12 @@ p {
     transition: transform .18s ease-out, border-color .18s ease-out, box-shadow .18s ease-out;
 }
 
-/* 跟随鼠标的光斑：只在 html.js + 可悬停设备上出现 */
+/* 跟随鼠标的光斑：放在文字**下面**（z-index:-1），否则半透明粉光会把小字洗到 4.5:1 以下 */
 .card::after {
     content: "";
     position: absolute;
     inset: 0;
+    z-index: -1;
     border-radius: inherit;
     background: radial-gradient(260px circle at var(--mx) var(--my), var(--spot), transparent 62%);
     opacity: 0;
@@ -459,22 +457,11 @@ p {
     pointer-events: none;
 }
 
-html.js .card:hover::after {
-    opacity: 1;
-}
-
-/* 编号是装饰：计数器生成，不属于正文内容 */
-.card::before {
-    counter-increment: card;
-    content: counter(card, decimal-leading-zero);
-    position: absolute;
-    top: 20px;
-    right: 22px;
-    color: var(--ink-faint);
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    font-variant-numeric: tabular-nums;
-    pointer-events: none;
+/* 触屏不做悬停态：否则点按后 :hover 粘住，会在卡片中心残留一个固定光斑 */
+@media (hover: hover) {
+    html.js .card:hover::after {
+        opacity: 1;
+    }
 }
 
 .card-head {
@@ -483,7 +470,6 @@ html.js .card:hover::after {
     align-items: baseline;
     gap: 4px 12px;
     margin-bottom: 10px;
-    padding-right: 46px;
 }
 
 .card p:last-child {
@@ -522,14 +508,8 @@ html.js .card:hover::after {
 @media (hover: hover) {
     .card:hover {
         transform: translateY(-2px);
-        border-color: rgba(245, 150, 170, .38);
-        box-shadow: 0 0 0 1px rgba(245, 150, 170, .12), 0 10px 30px rgba(26, 29, 33, .08);
-    }
-
-    /* 编号在 hover 时变成强调色（装饰，不参与正文对比度） */
-    .card:hover::before {
-        color: var(--pink);
-        transition: color .18s ease-out;
+        border-color: rgba(245, 150, 170, .26);
+        box-shadow: 0 0 0 1px rgba(245, 150, 170, .10), 0 10px 30px rgba(26, 29, 33, .08);
     }
 
     .tags li:hover {
@@ -737,15 +717,6 @@ footer .note {
         padding: 18px 18px;
     }
 
-    .card::before {
-        top: 16px;
-        right: 16px;
-    }
-
-    .card-head {
-        padding-right: 38px;
-    }
-
     .skills > div {
         grid-template-columns: 1fr;
         gap: 4px;
@@ -800,7 +771,7 @@ footer .note {
 
         --pink: #f0a8b8;
         --pink-soft: #2a1d22;
-        --pink-glow: rgba(240, 168, 184, .55);
+        --pink-glow: rgba(240, 168, 184, .36);
 
         --ink: #e9ebef;        /* 16.08:1 on #0d0f12 */
         --ink-soft: #a8b0bc;   /* 8.77:1 on #0d0f12 */
@@ -809,14 +780,14 @@ footer .note {
 
         --line: #262b33;
         --rule: #313741;
-        --tag-bg: rgba(233, 235, 239, .06);
-        --tag-bg-strong: rgba(233, 235, 239, .09);
+        --tag-bg: #1a1c1f;
+        --tag-bg-strong: #212326;
         --wash: rgba(233, 235, 239, .035);
-        --grid: rgba(233, 235, 239, .06);
+        --grid: rgba(233, 235, 239, .05);
         --spot: rgba(240, 168, 184, .16);
         --bg: #0d0f12;
         --surface: #0d0f12;
-        --bar-bg: rgba(13, 15, 18, .86);
+        --bar-bg: rgba(13, 15, 18, .90);
         --focus: #f0a8b8;
     }
 
@@ -832,7 +803,7 @@ footer .note {
 /* 深色 + 可悬停：卡片阴影换成暗色，但仍保留一点粉色描边 */
 @media (prefers-color-scheme: dark) and (hover: hover) {
     .card:hover {
-        border-color: rgba(240, 168, 184, .34);
-        box-shadow: 0 0 0 1px rgba(240, 168, 184, .14), 0 10px 30px rgba(0, 0, 0, .5);
+        border-color: rgba(240, 168, 184, .24);
+        box-shadow: 0 0 0 1px rgba(240, 168, 184, .10), 0 10px 30px rgba(0, 0, 0, .5);
     }
 }
