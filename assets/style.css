@@ -11,6 +11,8 @@
     --pink: #f596aa;
     /* 选中文本的淡粉底（不与页面其他元素争强调） */
     --pink-soft: #fbe9ed;
+    /* 粉色辉光：只用于装饰线/光斑，不用于文字 */
+    --pink-glow: rgba(245, 150, 170, .45);
 
     --ink: #1a1d21;        /* 正文 / 标题（16.91:1 on #fff） */
     --ink-soft: #565e69;   /* 次级正文（6.56:1 on #fff） */
@@ -22,6 +24,8 @@
     --tag-bg: rgba(26, 29, 33, .045);        /* 元数据标签极淡底 */
     --tag-bg-strong: rgba(26, 29, 33, .055); /* 标签 hover 底（再深会让 12px 灰字跌破 4.5:1） */
     --wash: rgba(26, 29, 33, .025);          /* 仓库行 hover 极淡底 */
+    --grid: rgba(26, 29, 33, .05);           /* hero 极淡网格线 */
+    --spot: rgba(245, 150, 170, .13);        /* 卡片跟随鼠标的光斑 */
     --bg: #ffffff;
     --surface: #ffffff;
     --bar-bg: rgba(255, 255, 255, .86);      /* 顶栏滚动后的半透明底 */
@@ -241,6 +245,7 @@ html.js .topbar.is-scrolled {
     transform: scaleX(0);
     transform-origin: left;
     pointer-events: none;
+    box-shadow: 0 0 10px var(--pink-glow);
 }
 
 html:not(.js) .progress {
@@ -290,11 +295,27 @@ html.js .reveal.is-in {
 /* ---------- 头部：纯色底 + 极淡粉色光晕（无可见边界） ---------- */
 
 .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     padding: calc(var(--bar-h) + 76px) 0 64px;
     border-bottom: 1px solid var(--rule);
     background: var(--bg);
-    background-image: radial-gradient(120% 92% at 50% -14%,
-            rgba(245, 150, 170, .07), rgba(245, 150, 170, 0) 68%);
+}
+
+/* 网格与光晕放在伪元素上：这样 mask 只裁背景，不会把标题文字也淡掉 */
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+        radial-gradient(120% 92% at 50% -14%, rgba(245, 150, 170, .10), rgba(245, 150, 170, 0) 66%),
+        linear-gradient(to right, var(--grid) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+    background-size: auto, 64px 64px, 64px 64px;
+    -webkit-mask-image: linear-gradient(to bottom, #000 52%, transparent 96%);
+    mask-image: linear-gradient(to bottom, #000 52%, transparent 96%);
 }
 
 .hero h1 {
@@ -361,7 +382,33 @@ h2::before {
     margin-right: 10px;
     border-radius: 2px;
     background: var(--pink);
+    box-shadow: 0 0 12px var(--pink-glow);
     vertical-align: middle;
+}
+
+/* 区块编号：01–04，排在标题行最右，等宽数字（装饰，不进正文） */
+main {
+    counter-reset: sec 0;
+}
+
+main section {
+    counter-increment: sec;
+}
+
+h2 {
+    display: flex;
+    align-items: center;
+}
+
+h2::after {
+    content: "0" counter(sec);
+    margin-left: auto;
+    padding-left: 16px;
+    color: var(--ink-faint);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    font-variant-numeric: tabular-nums;
 }
 
 h3 {
@@ -388,12 +435,32 @@ p {
 
 .card {
     position: relative;
+    overflow: hidden;
+    /* 光斑默认在中心；JS 在 pointermove 时更新成鼠标坐标 */
+    --mx: 50%;
+    --my: 50%;
     margin-bottom: 14px;
     padding: 22px 24px;
     border: 1px solid var(--line);
     border-radius: var(--radius);
     background: var(--surface);
     transition: transform .18s ease-out, border-color .18s ease-out, box-shadow .18s ease-out;
+}
+
+/* 跟随鼠标的光斑：只在 html.js + 可悬停设备上出现 */
+.card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(260px circle at var(--mx) var(--my), var(--spot), transparent 62%);
+    opacity: 0;
+    transition: opacity .22s ease-out;
+    pointer-events: none;
+}
+
+html.js .card:hover::after {
+    opacity: 1;
 }
 
 /* 编号是装饰：计数器生成，不属于正文内容 */
@@ -455,8 +522,14 @@ p {
 @media (hover: hover) {
     .card:hover {
         transform: translateY(-2px);
-        border-color: var(--rule);
-        box-shadow: 0 6px 20px rgba(26, 29, 33, .06);
+        border-color: rgba(245, 150, 170, .38);
+        box-shadow: 0 0 0 1px rgba(245, 150, 170, .12), 0 10px 30px rgba(26, 29, 33, .08);
+    }
+
+    /* 编号在 hover 时变成强调色（装饰，不参与正文对比度） */
+    .card:hover::before {
+        color: var(--pink);
+        transition: color .18s ease-out;
     }
 
     .tags li:hover {
@@ -712,6 +785,11 @@ footer .note {
         transform: none !important;
         box-shadow: none !important;
     }
+
+    /* 跟随鼠标的光斑也是动效：关掉 */
+    .card::after {
+        display: none !important;
+    }
 }
 
 /* ---------- 深色模式：真正的深色底 ---------- */
@@ -722,6 +800,7 @@ footer .note {
 
         --pink: #f0a8b8;
         --pink-soft: #2a1d22;
+        --pink-glow: rgba(240, 168, 184, .55);
 
         --ink: #e9ebef;        /* 16.08:1 on #0d0f12 */
         --ink-soft: #a8b0bc;   /* 8.77:1 on #0d0f12 */
@@ -733,6 +812,8 @@ footer .note {
         --tag-bg: rgba(233, 235, 239, .06);
         --tag-bg-strong: rgba(233, 235, 239, .09);
         --wash: rgba(233, 235, 239, .035);
+        --grid: rgba(233, 235, 239, .06);
+        --spot: rgba(240, 168, 184, .16);
         --bg: #0d0f12;
         --surface: #0d0f12;
         --bar-bg: rgba(13, 15, 18, .86);
@@ -740,15 +821,18 @@ footer .note {
     }
 
     /* 深色下 hero 光晕再淡一点，避免在近黑底上出现可见色块 */
-    .hero {
-        background-image: radial-gradient(120% 92% at 50% -14%,
-                rgba(240, 168, 184, .06), rgba(240, 168, 184, 0) 68%);
+    .hero::before {
+        background-image:
+            radial-gradient(120% 92% at 50% -14%, rgba(240, 168, 184, .09), rgba(240, 168, 184, 0) 66%),
+            linear-gradient(to right, var(--grid) 1px, transparent 1px),
+            linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
     }
 }
 
-/* 深色 + 可悬停：卡片阴影换成暗色 */
+/* 深色 + 可悬停：卡片阴影换成暗色，但仍保留一点粉色描边 */
 @media (prefers-color-scheme: dark) and (hover: hover) {
     .card:hover {
-        box-shadow: 0 6px 20px rgba(0, 0, 0, .4);
+        border-color: rgba(240, 168, 184, .34);
+        box-shadow: 0 0 0 1px rgba(240, 168, 184, .14), 0 10px 30px rgba(0, 0, 0, .5);
     }
 }

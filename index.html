@@ -234,6 +234,27 @@
                     for (var s = 0; s < sections.length; s++) { ioNav.observe(sections[s]); }
                 }
 
+                /* 卡片光斑：鼠标在卡片内移动时更新光斑中心（纯装饰；无 JS / reduce 时不出现）
+                   用 rAF 节流：每帧最多更新一次，避免高频 pointermove 反复重绘渐变 */
+                if (!reduce && window.matchMedia && window.matchMedia('(hover: hover)').matches) {
+                    var cards = document.querySelectorAll('.card');
+                    var track = function (e) {
+                        var el = this;
+                        var x = e.clientX;
+                        var y = e.clientY;
+                        if (el.raf) { return; }
+                        el.raf = window.requestAnimationFrame(function () {
+                            var r = el.getBoundingClientRect();
+                            el.style.setProperty('--mx', (x - r.left) + 'px');
+                            el.style.setProperty('--my', (y - r.top) + 'px');
+                            el.raf = null;
+                        });
+                    };
+                    for (var n = 0; n < cards.length; n++) {
+                        cards[n].addEventListener('pointermove', track, { passive: true });
+                    }
+                }
+
                 if (!reduce) {
                     /* 滚动进场只触发一次；同批错开 60ms，封顶 240ms（240 + 460 < 700） */
                     var items = document.querySelectorAll('main section, .card, .repos li, .skills > div');
