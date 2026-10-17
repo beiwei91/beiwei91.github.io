@@ -94,6 +94,8 @@ a {
     text-decoration: none;
     position: relative;
     display: inline-block;
+    /* 固定顶栏会遮住滚到顶部的元素：给所有链接留出让位，键盘 Tab 到时不至于整条被栏挡住 */
+    scroll-margin-top: calc(var(--bar-h) + 12px);
 }
 
 /* 链接下划线不用 text-decoration 跳动，而是 ::after 从左侧「画」出来（260ms） */
@@ -176,7 +178,8 @@ html.js .topbar.is-scrolled {
 
 .topbar .wrap {
     display: flex;
-    align-items: center;
+    /* stretch：让 .nav 拿到 52px 高的裁剪盒，焦点环（外扩 5px）才不会被 overflow 裁掉 */
+    align-items: stretch;
     height: var(--bar-h);
 }
 
@@ -220,6 +223,11 @@ html.js .topbar.is-scrolled {
 .nav a.is-active::after {
     transform: scaleX(1);
     opacity: 1;
+}
+
+/* 导航下划线用次级正文色（6.25:1），别用装饰灰（透明顶栏态只有 2.99:1） */
+.nav a::after {
+    background: var(--ink-soft);
 }
 
 /* 阅读进度：贴在顶栏底边，只在 html.js 下出现 */
@@ -408,7 +416,7 @@ p {
     align-items: baseline;
     gap: 4px 12px;
     margin-bottom: 10px;
-    padding-right: 40px;
+    padding-right: 46px;
 }
 
 .card p:last-child {
@@ -662,7 +670,7 @@ footer .note {
     }
 
     .card-head {
-        padding-right: 32px;
+        padding-right: 38px;
     }
 
     .skills > div {
@@ -699,7 +707,8 @@ footer .note {
         display: none !important;
     }
 
-    html.js .card:hover {
+    /* 卡片 hover 位移在 reduce 下一律关掉（不加 html.js 前缀：无 JS 时也生效） */
+    .card:hover {
         transform: none !important;
         box-shadow: none !important;
     }
