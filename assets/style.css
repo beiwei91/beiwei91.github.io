@@ -1,7 +1,8 @@
 /* 北纬91 · 个人主页
-   零依赖：无外部字体、无 CDN、无脚本。
+   零依赖：无外部字体、无 CDN、无第三方脚本。
    视觉方向：克制、留白、低装饰。粉色 #f596aa 只保留在标题竖条一处强调；
-   其余（含 hover）全部走中性色。深色模式是真正的深色（#0d0f12），不是简单反色。 */
+   其余（含 hover）全部走中性色。深色模式是真正的深色（#0d0f12），不是简单反色。
+   动效：慢、轻、有节奏，全部可被 prefers-reduced-motion 关闭。 */
 
 :root {
     color-scheme: light dark;
@@ -14,17 +15,19 @@
     --ink: #1a1d21;        /* 正文 / 标题（16.91:1 on #fff） */
     --ink-soft: #565e69;   /* 次级正文（6.56:1 on #fff） */
     --ink-faint: #676f7b;  /* 13px 小字（5.08:1 on #fff） */
-    --muted: #8b929c;      /* 非文字装饰：细线、圆点、短横线 */
+    --muted: #8b929c;      /* 非文字装饰：细线、分隔 */
 
     --line: #e2e5ea;       /* 常规 1px 细线（卡片边框、虚线分隔） */
     --rule: #d5d9e0;       /* 区块上方分隔线 */
-    --tag-bg: rgba(26, 29, 33, .045); /* 元数据标签极淡底 */
+    --tag-bg: rgba(26, 29, 33, .045);        /* 元数据标签极淡底 */
     --tag-bg-strong: rgba(26, 29, 33, .055); /* 标签 hover 底（再深会让 12px 灰字跌破 4.5:1） */
-    --wash: rgba(26, 29, 33, .025); /* 仓库行 hover 极淡底 */
+    --wash: rgba(26, 29, 33, .025);          /* 仓库行 hover 极淡底 */
     --bg: #ffffff;
     --surface: #ffffff;
+    --bar-bg: rgba(255, 255, 255, .86);      /* 顶栏滚动后的半透明底 */
     --focus: #1a1d21;
 
+    --bar-h: 52px;
     --radius: 3px;
     --maxw: 760px;
 }
@@ -35,6 +38,13 @@
 
 html {
     -webkit-text-size-adjust: 100%;
+}
+
+/* 只在用户没有要求减少动效时才做平滑锚点跳转 */
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
 }
 
 body {
@@ -67,6 +77,16 @@ h3 {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
         "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", sans-serif;
     font-weight: 600;
+}
+
+/* 标题断行更均衡，避免最后一行只剩一两个字 */
+h1,
+h2 {
+    text-wrap: balance;
+}
+
+p {
+    text-wrap: pretty;
 }
 
 a {
@@ -113,7 +133,7 @@ a:focus-visible::after {
     display: block;
     top: 0;
     left: -9999px;
-    z-index: 10;
+    z-index: 30;
     padding: 10px 16px;
     border: 1px solid var(--line);
     border-radius: 0 0 var(--radius) var(--radius);
@@ -126,14 +146,87 @@ a:focus-visible::after {
     left: 0;
 }
 
-/* ---------- 进度线 / 进场动效（全部挂在 html.js 下，无 JS 时不存在） ---------- */
+/* ---------- 固定顶栏 ---------- */
 
-/* 刚滚到顶时 scaleX(0) 不可见；粉色强调的第二处用法，仅此一条线 */
-html.js .progress {
+/* 无 JS：常驻不透明，任何情况下都读得清 */
+.topbar {
     position: fixed;
     top: 0;
     left: 0;
+    right: 0;
     z-index: 20;
+    height: var(--bar-h);
+    background: var(--bg);
+    border-bottom: 1px solid var(--rule);
+}
+
+/* 有 JS：页面顶部透明（像 hero 的一部分），滚动后再浮现背景 */
+html.js .topbar {
+    background: transparent;
+    border-bottom-color: transparent;
+    transition: background-color .2s ease-out, border-color .2s ease-out;
+}
+
+html.js .topbar.is-scrolled {
+    background: var(--bar-bg);
+    border-bottom-color: var(--rule);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+}
+
+.topbar .wrap {
+    display: flex;
+    align-items: center;
+    height: var(--bar-h);
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.nav::-webkit-scrollbar {
+    display: none;
+}
+
+/* 导航：纯文字，无药丸、无边框；下划线走通用 a::after 的「画出」动效 */
+.nav a {
+    display: inline-block;
+    margin-right: 20px;
+    padding: 6px 0;
+    color: var(--ink-soft);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.nav a:last-child {
+    margin-right: 0;
+}
+
+.nav a:hover {
+    color: var(--ink);
+}
+
+/* 当前所在区块：下划线常亮，颜色提到正文级 */
+.nav a.is-active {
+    color: var(--ink);
+}
+
+.nav a.is-active::after {
+    transform: scaleX(1);
+    opacity: 1;
+}
+
+/* 阅读进度：贴在顶栏底边，只在 html.js 下出现 */
+.progress {
+    position: absolute;
+    left: 0;
+    bottom: -1px;
     width: 100%;
     height: 2px;
     background: var(--pink);
@@ -141,6 +234,12 @@ html.js .progress {
     transform-origin: left;
     pointer-events: none;
 }
+
+html:not(.js) .progress {
+    display: none;
+}
+
+/* ---------- 进场动效（全部挂在 html.js 下，无 JS 时不存在） ---------- */
 
 @keyframes fade-up {
     from {
@@ -154,8 +253,7 @@ html.js .progress {
     }
 }
 
-/* hero 进场：单条 520ms；标题 → 定位 → 正文 → 导航 错开 70ms，最后一档收在 180ms
-   使总时窗 180 + 520 = 700ms，不越 700ms 上限 */
+/* hero 进场：单条 520ms；标题 → 定位 → 正文 错开 70ms；总时窗 140 + 520 = 660ms */
 html.js .fade-up {
     animation: fade-up .52s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
@@ -166,10 +264,6 @@ html.js .tagline {
 
 html.js .lede {
     animation-delay: 140ms;
-}
-
-html.js .hero-links {
-    animation-delay: 180ms;
 }
 
 /* 滚动进场：460ms，translateY(10px) → 0，只触发一次（JS unobserve） */
@@ -185,10 +279,10 @@ html.js .reveal.is-in {
     transform: none;
 }
 
-/* ---------- 头部：纯色底，局部极淡粉色光晕（无可见边界） ---------- */
+/* ---------- 头部：纯色底 + 极淡粉色光晕（无可见边界） ---------- */
 
 .hero {
-    padding: 88px 0 56px;
+    padding: calc(var(--bar-h) + 76px) 0 64px;
     border-bottom: 1px solid var(--rule);
     background: var(--bg);
     background-image: radial-gradient(120% 92% at 50% -14%,
@@ -197,9 +291,9 @@ html.js .reveal.is-in {
 
 .hero h1 {
     margin: 0 0 14px;
-    font-size: clamp(30px, 5.6vw, 38px);
-    line-height: 1.2;
-    letter-spacing: -0.012em;
+    font-size: clamp(32px, 6vw, 44px);
+    line-height: 1.18;
+    letter-spacing: -0.015em;
 }
 
 .hero h1 .handle {
@@ -210,39 +304,23 @@ html.js .reveal.is-in {
         "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", sans-serif;
     font-size: 13px;
     font-weight: 400;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     vertical-align: middle;
 }
 
 .tagline {
     margin: 0 0 22px;
     color: var(--ink);
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 400;
     letter-spacing: 0.01em;
 }
 
 .lede {
-    max-width: 64ch;
-    margin: 0 0 30px;
+    max-width: 62ch;
+    margin: 0;
     color: var(--ink-soft);
     line-height: 1.85;
-}
-
-/* 导航：纯文字，无药丸、无边框；下划线走通用 a::after 的「画出」动效 */
-.hero-links a {
-    display: inline-block;
-    margin: 0 18px 6px 0;
-    padding: 0;
-    color: var(--ink-soft);
-    font-size: 13px;
-    letter-spacing: 0.1em;
-    text-decoration: none;
-    transition: color .18s ease-out;
-}
-
-.hero-links a:hover {
-    color: var(--ink);
 }
 
 /* ---------- 区块 ---------- */
@@ -250,11 +328,18 @@ html.js .reveal.is-in {
 main section {
     padding: 56px 0 8px;
     border-top: 1px solid var(--rule);
+    /* 锚点跳转时给固定顶栏留出空间 */
+    scroll-margin-top: calc(var(--bar-h) + 28px);
+}
+
+main section:first-child {
+    border-top: none;
+    padding-top: 64px;
 }
 
 h2 {
     margin: 0 0 26px;
-    font-size: 19px;
+    font-size: 20px;
     font-weight: 600;
     letter-spacing: 0.01em;
 }
@@ -287,9 +372,14 @@ p {
     font-size: 15px;
 }
 
-/* ---------- 项目卡片：纯色底 + 1px 细边框 ---------- */
+/* ---------- 项目卡片：纯色底 + 1px 细边框 + 右上角编号 ---------- */
+
+#work {
+    counter-reset: card 0;
+}
 
 .card {
+    position: relative;
     margin-bottom: 14px;
     padding: 22px 24px;
     border: 1px solid var(--line);
@@ -298,11 +388,18 @@ p {
     transition: transform .18s ease-out, border-color .18s ease-out, box-shadow .18s ease-out;
 }
 
-/* hover：上浮 2px + 边框变深 + 极浅阴影（180ms） */
-.card:hover {
-    transform: translateY(-2px);
-    border-color: var(--rule);
-    box-shadow: 0 6px 20px rgba(26, 29, 33, .06);
+/* 编号是装饰：计数器生成，不属于正文内容 */
+.card::before {
+    counter-increment: card;
+    content: counter(card, decimal-leading-zero);
+    position: absolute;
+    top: 20px;
+    right: 22px;
+    color: var(--ink-faint);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
 }
 
 .card-head {
@@ -311,6 +408,7 @@ p {
     align-items: baseline;
     gap: 4px 12px;
     margin-bottom: 10px;
+    padding-right: 40px;
 }
 
 .card p:last-child {
@@ -322,6 +420,7 @@ p {
     color: var(--ink-faint);
     font-size: 13px;
     letter-spacing: 0.09em;
+    font-variant-numeric: tabular-nums;
 }
 
 .tags {
@@ -344,8 +443,17 @@ p {
     transition: background-color .18s ease-out;
 }
 
-.tags li:hover {
-    background: var(--tag-bg-strong);
+/* 触屏设备不做悬停态，避免 hover「粘住」 */
+@media (hover: hover) {
+    .card:hover {
+        transform: translateY(-2px);
+        border-color: var(--rule);
+        box-shadow: 0 6px 20px rgba(26, 29, 33, .06);
+    }
+
+    .tags li:hover {
+        background: var(--tag-bg-strong);
+    }
 }
 
 /* ---------- 技能 ---------- */
@@ -411,12 +519,6 @@ p {
     transition: background-color .18s ease-out;
 }
 
-/* hover：整行极淡底 wash，用内阴影模拟左右外扩的 padding，不造成布局位移 */
-.repos li:hover {
-    background-color: var(--wash);
-    box-shadow: -12px 0 0 var(--wash), 12px 0 0 var(--wash);
-}
-
 .repos li:last-child {
     border-bottom: none;
 }
@@ -430,6 +532,15 @@ p {
     color: var(--ink-faint);
     font-size: 13px;
     letter-spacing: 0.08em;
+    font-variant-numeric: tabular-nums;
+}
+
+/* hover：整行极淡底 wash，用外扩阴影模拟左右 padding，不造成布局位移 */
+@media (hover: hover) {
+    .repos li:hover {
+        background-color: var(--wash);
+        box-shadow: -12px 0 0 var(--wash), 12px 0 0 var(--wash);
+    }
 }
 
 /* ---------- 页脚 ---------- */
@@ -457,7 +568,7 @@ footer .note {
     color: var(--ink-faint);
 }
 
-/* ---------- 404 ---------- */
+/* ---------- 404（没有固定顶栏，所以不留顶栏高度） ---------- */
 
 .notfound {
     padding: 132px 0 160px; /* 左右 padding 交给 .wrap */
@@ -509,8 +620,18 @@ footer .note {
         padding: 0 22px;
     }
 
+    .nav a {
+        margin-right: 16px;
+        font-size: 12.5px;
+        letter-spacing: 0.08em;
+    }
+
     .hero {
-        padding: 56px 0 40px;
+        padding: calc(var(--bar-h) + 40px) 0 44px;
+    }
+
+    .hero h1 {
+        font-size: clamp(27px, 8.4vw, 34px);
     }
 
     .hero h1 .handle {
@@ -519,11 +640,29 @@ footer .note {
     }
 
     main section {
-        padding: 40px 0 4px;
+        padding: 44px 0 4px;
+    }
+
+    main section:first-child {
+        padding-top: 48px;
+    }
+
+    h2 {
+        font-size: 18px;
+        margin-bottom: 22px;
     }
 
     .card {
         padding: 18px 18px;
+    }
+
+    .card::before {
+        top: 16px;
+        right: 16px;
+    }
+
+    .card-head {
+        padding-right: 32px;
     }
 
     .skills > div {
@@ -536,8 +675,8 @@ footer .note {
     }
 }
 
-/* ---------- 减少动效：关掉全部进场 / 滚动 / hover 位移 / 进度线，内容默认可见 ---------- */
-/* 这段刻意放在文件最后：与上面同样 specificity 的规则靠顺序取胜 */
+/* ---------- 减少动效：关掉全部进场 / 滚动 / hover 位移 / 进度线 ---------- */
+/* 本段与后面的深色块没有属性交集（深色块只改颜色变量），不存在互相覆盖。 */
 
 @media (prefers-reduced-motion: reduce) {
 
@@ -587,6 +726,7 @@ footer .note {
         --wash: rgba(233, 235, 239, .035);
         --bg: #0d0f12;
         --surface: #0d0f12;
+        --bar-bg: rgba(13, 15, 18, .86);
         --focus: #f0a8b8;
     }
 
@@ -595,7 +735,10 @@ footer .note {
         background-image: radial-gradient(120% 92% at 50% -14%,
                 rgba(240, 168, 184, .06), rgba(240, 168, 184, 0) 68%);
     }
+}
 
+/* 深色 + 可悬停：卡片阴影换成暗色 */
+@media (prefers-color-scheme: dark) and (hover: hover) {
     .card:hover {
         box-shadow: 0 6px 20px rgba(0, 0, 0, .4);
     }
