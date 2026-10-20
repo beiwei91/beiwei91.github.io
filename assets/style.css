@@ -1,39 +1,39 @@
-/* 北纬91 · 个人主页
-   零依赖：无外部字体、无 CDN、无第三方脚本。
-   视觉方向：克制、留白、低装饰。粉色 #f596aa 只保留在标题竖条一处强调；
-   其余（含 hover）全部走中性色。深色模式是真正的深色（#0d0f12），不是简单反色。
-   动效：慢、轻、有节奏，全部可被 prefers-reduced-motion 关闭。 */
+/* 北纬91 · 一张唱片的封套
+   零依赖：无外部字体、无 CDN、无脚本。
+   纸张 + 夜蓝 + 宋体；只有一条动效：载入时唱片从封套里滑出 10px。 */
 
 :root {
     color-scheme: light dark;
 
-    /* 唯一的粉色强调：#f596aa。只用于 h2::before 那一个 3px 竖条。 */
-    --pink: #f596aa;
-    /* 选中文本的淡粉底（不与页面其他元素争强调） */
-    --pink-soft: #fbe9ed;
-    /* 粉色辉光：只用于装饰线/光斑，不用于文字 */
-    --pink-glow: rgba(245, 150, 170, .28);
+    --paper: #f1f2f0;
+    --ink: #171a1d;
+    --ink-2: #565c62;
+    --blue: #33496b;
+    --rule: #dcdcd6;
+    --frame: #cbcac2; /* 整页外框线：比 --rule 深一档，才看得见 */
 
-    --ink: #1a1d21;        /* 正文 / 标题（16.91:1 on #fff） */
-    --ink-soft: #565e69;   /* 次级正文（6.56:1 on #fff） */
-    --ink-faint: #676f7b;  /* 13px 小字（5.08:1 on #fff） */
-    --muted: #8b929c;      /* 非文字装饰：细线、分隔 */
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", sans-serif;
+    /* 本机装的是 Noto Serif SC（不带 CJK），不是 Noto Serif CJK SC，两个族名要都写 */
+    --serif: "Source Han Serif SC", "Noto Serif SC", "Noto Serif CJK SC",
+        "Songti SC", SimSun, serif;
 
-    --line: #e2e5ea;       /* 常规 1px 细线（卡片边框、虚线分隔） */
-    --rule: #d5d9e0;       /* 区块上方分隔线 */
-    --tag-bg: #f5f5f5;                       /* 元数据标签底：用不透明色，光斑不会透上来 */
-    --tag-bg-strong: #f2f3f3;                /* 标签 hover 底（再深会让 12px 灰字跌破 4.5:1） */
-    --wash: rgba(26, 29, 33, .025);          /* 仓库行 hover 极淡底 */
-    --grid: rgba(26, 29, 33, .04);           /* hero 极淡网格线 */
-    --spot: rgba(245, 150, 170, .13);        /* 卡片跟随鼠标的光斑 */
-    --bg: #ffffff;
-    --surface: #ffffff;
-    --bar-bg: rgba(255, 255, 255, .90);     /* 顶栏滚动后的半透明底 */
-    --focus: #1a1d21;
+    --col: 820px;
+    --pad: clamp(18px, 4vw, 28px);
+}
 
-    --bar-h: 52px;
-    --radius: 3px;
-    --maxw: 760px;
+/* 深色不是反色：另配一套纸与墨 */
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+
+        --paper: #121417;
+        --ink: #e7e9e6;
+        --ink-2: #9aa1a8;
+        --blue: #93a8c6;
+        --rule: #2a2d31;
+        --frame: #34383d;
+    }
 }
 
 * {
@@ -44,7 +44,6 @@ html {
     -webkit-text-size-adjust: 100%;
 }
 
-/* 只在用户没有要求减少动效时才做平滑锚点跳转 */
 @media (prefers-reduced-motion: no-preference) {
     html {
         scroll-behavior: smooth;
@@ -53,757 +52,464 @@ html {
 
 body {
     margin: 0;
-    background: var(--bg);
+    padding-inline: 12px; /* 窄屏时给封套留 gutter：1px 边框贴屏幕边会像没裁干净 */
+    background: var(--paper);
     color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-        "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", sans-serif;
+    font-family: var(--sans);
     font-size: 16px;
-    line-height: 1.8;
+    line-height: 1.85;
     overflow-wrap: break-word;
 }
 
 ::selection {
-    background: var(--pink-soft);
-    color: var(--ink);
+    background: var(--blue);
+    color: var(--paper);
 }
 
-.wrap {
-    max-width: var(--maxw);
-    margin: 0 auto;
-    padding: 0 28px;
+/* 内容列：封套、正文、页脚共用同一条左基线 */
+.col {
+    max-width: var(--col);
+    margin-inline: auto;
+    padding-inline: var(--pad);
 }
 
-/* 标题与正文同一套 sans 栈：跨平台一致优先于衬线优雅
-   （serif 在 Windows 会落到 SimSun，细小偏旧） */
-h1,
-h2,
-h3 {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-        "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", sans-serif;
-    font-weight: 600;
-}
-
-/* 标题断行更均衡，避免最后一行只剩一两个字 */
-h1,
-h2 {
-    text-wrap: balance;
-}
-
-p {
-    text-wrap: pretty;
+p,
+dd {
+    margin: 0;
 }
 
 a {
     color: var(--ink);
     text-decoration: none;
-    position: relative;
-    display: inline-block;
-    /* 固定顶栏会遮住滚到顶部的元素：给所有链接留出让位，键盘 Tab 到时不至于整条被栏挡住 */
-    scroll-margin-top: calc(var(--bar-h) + 12px);
-}
-
-/* 链接下划线不用 text-decoration 跳动，而是 ::after 从左侧「画」出来（260ms） */
-a::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 1px;
-    width: 100%;
-    height: 1px;
-    background: var(--muted);
-    transform: scaleX(0);
-    transform-origin: left;
-    opacity: 0;
-    transition: transform .26s ease-out, opacity .26s ease-out;
 }
 
 a:hover {
-    color: var(--ink);
-}
-
-a:hover::after,
-a:focus-visible::after {
-    transform: scaleX(1);
-    opacity: 1;
+    color: var(--blue);
 }
 
 :focus-visible {
-    outline: 2px solid var(--focus);
+    outline: 2px solid var(--blue);
     outline-offset: 3px;
-    border-radius: 2px;
 }
 
-/* 键盘用户跳过导航 */
 .skip-link {
     position: absolute;
-    display: block;
     top: 0;
     left: -9999px;
-    z-index: 30;
+    z-index: 10;
     padding: 10px 16px;
-    border: 1px solid var(--line);
-    border-radius: 0 0 var(--radius) var(--radius);
-    background: var(--surface);
+    border: 1px solid var(--rule);
+    background: var(--paper);
     color: var(--ink);
-    text-decoration: none;
 }
 
 .skip-link:focus {
     left: 0;
 }
 
-/* ---------- 固定顶栏 ---------- */
+/* ---------- 封套：整页就是一张唱片背面 ---------- */
 
-/* 无 JS：常驻不透明，任何情况下都读得清 */
-.topbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 20;
-    height: var(--bar-h);
-    background: var(--bg);
-    border-bottom: 1px solid var(--rule);
+/* 外框包住封套头 + 两面 + credits + 页脚；框线在 .col 内容列外侧，
+   max-width 比内容列宽 40px，靠 .col 的 auto 外边距抵消，左基线不变 */
+.cover {
+    position: relative;
+    max-width: calc(var(--col) + 40px);
+    margin: clamp(16px, 3vw, 32px) auto clamp(24px, 4vw, 48px);
+    border: 1px solid var(--frame);
 }
 
-/* 有 JS：页面顶部透明（像 hero 的一部分），滚动后再浮现背景 */
-html.js .topbar {
-    background: transparent;
-    border-bottom-color: transparent;
-    transition: background-color .2s ease-out, border-color .2s ease-out;
-}
-
-html.js .topbar.is-scrolled {
-    background: var(--bar-bg);
-    border-bottom-color: var(--rule);
-    backdrop-filter: blur(12px) saturate(140%);
-    -webkit-backdrop-filter: blur(12px) saturate(140%);
-}
-
-.topbar .wrap {
-    display: flex;
-    /* stretch：让 .nav 拿到 52px 高的裁剪盒，焦点环（外扩 5px）才不会被 overflow 裁掉 */
-    align-items: stretch;
-    height: var(--bar-h);
-}
-
-.nav {
-    display: flex;
-    align-items: center;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.nav::-webkit-scrollbar {
-    display: none;
-}
-
-/* 导航：纯文字，无药丸、无边框；下划线走通用 a::after 的「画出」动效 */
-.nav a {
-    display: inline-block;
-    margin-right: 20px;
-    padding: 6px 0;
-    color: var(--ink-soft);
-    font-size: 13px;
-    letter-spacing: 0.1em;
-    white-space: nowrap;
-    text-decoration: none;
-}
-
-.nav a:last-child {
-    margin-right: 0;
-}
-
-.nav a:hover {
-    color: var(--ink);
-}
-
-/* 当前所在区块：下划线常亮，颜色提到正文级 */
-.nav a.is-active {
-    color: var(--ink);
-}
-
-.nav a.is-active::after {
-    transform: scaleX(1);
-    opacity: 1;
-}
-
-/* 导航下划线用次级正文色（6.25:1），别用装饰灰（透明顶栏态只有 2.99:1） */
-.nav a::after {
-    background: var(--ink-soft);
-}
-
-/* 阅读进度：贴在顶栏底边，只在 html.js 下出现 */
-.progress {
+/* 唱片露出的边缘：一条夜蓝细线，通高（从封套顶到底），
+   载入时从套内滑出 10px —— 这是全站唯一的动效。
+   用 --blue 而不是 --rule：--rule 在纸白上只有 1.23:1，那条线会看不见。 */
+.cover::after {
+    content: "";
     position: absolute;
-    left: 0;
-    bottom: -1px;
-    width: 100%;
-    height: 2px;
-    background: var(--pink);
-    transform: scaleX(0);
-    transform-origin: left;
-    pointer-events: none;
-    box-shadow: 0 0 10px var(--pink-glow);
+    top: 0;
+    bottom: 0;
+    right: 12px;
+    width: 1px;
+    background: var(--blue);
+    animation: record-out .7s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 
-html:not(.js) .progress {
-    display: none;
-}
-
-/* ---------- 进场动效（全部挂在 html.js 下，无 JS 时不存在） ---------- */
-
-@keyframes fade-up {
+@keyframes record-out {
     from {
         opacity: 0;
-        transform: translateY(14px);
+        transform: translateX(-10px);
     }
 
     to {
         opacity: 1;
-        transform: none;
+        transform: translateX(0);
     }
 }
 
-/* hero 进场：单条 520ms；标题 → 定位 → 正文 错开 70ms；总时窗 140 + 520 = 660ms */
-html.js .fade-up {
-    animation: fade-up .52s cubic-bezier(0.22, 0.61, 0.36, 1) both;
-}
-
-html.js .tagline {
-    animation-delay: 70ms;
-}
-
-html.js .lede {
-    animation-delay: 140ms;
-}
-
-/* 滚动进场：460ms，translateY(10px) → 0，只触发一次（JS unobserve） */
-html.js .reveal {
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity .46s cubic-bezier(0.22, 0.61, 0.36, 1),
-        transform .46s cubic-bezier(0.22, 0.61, 0.36, 1);
-}
-
-html.js .reveal.is-in {
-    opacity: 1;
-    transform: none;
-}
-
-/* ---------- 头部：纯色底 + 极淡粉色光晕（无可见边界） ---------- */
-
-.hero {
+.sleeve {
     position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    padding: calc(var(--bar-h) + 76px) 0 64px;
-    border-bottom: 1px solid var(--rule);
-    background: var(--bg);
-}
-
-/* 网格与光晕放在伪元素上：这样 mask 只裁背景，不会把标题文字也淡掉 */
-.hero::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background-image:
-        radial-gradient(120% 92% at 50% -14%, rgba(245, 150, 170, .10), rgba(245, 150, 170, 0) 66%),
-        linear-gradient(to right, var(--grid) 1px, transparent 1px),
-        linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
-    background-size: auto, 80px 80px, 80px 80px;
-    -webkit-mask-image: linear-gradient(to bottom, #000 52%, transparent 96%);
-    mask-image: linear-gradient(to bottom, #000 52%, transparent 96%);
-}
-
-.hero h1 {
-    margin: 0 0 14px;
-    font-size: clamp(32px, 6vw, 44px);
-    line-height: 1.18;
-    letter-spacing: -0.015em;
-}
-
-.hero h1 .handle {
-    display: inline-block;
-    margin-left: 12px;
-    color: var(--ink-faint);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-        "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", sans-serif;
-    font-size: 13px;
-    font-weight: 400;
-    letter-spacing: 0.14em;
-    vertical-align: middle;
-}
-
-.tagline {
-    margin: 0 0 22px;
-    color: var(--ink);
-    font-size: 18px;
-    font-weight: 400;
-    letter-spacing: 0.01em;
-}
-
-.lede {
-    max-width: 62ch;
-    margin: 0;
-    color: var(--ink-soft);
-    line-height: 1.85;
-}
-
-/* ---------- 区块 ---------- */
-
-main section {
-    padding: 56px 0 8px;
-    border-top: 1px solid var(--rule);
-    /* 锚点跳转时给固定顶栏留出空间 */
-    scroll-margin-top: calc(var(--bar-h) + 28px);
-}
-
-main section:first-child {
-    border-top: none;
-    padding-top: 64px;
-}
-
-h2 {
-    margin: 0 0 26px;
-    font-size: 20px;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-}
-
-/* 全页唯一一处粉色强调：编辑排版的竖条，不是项目符号 */
-h2::before {
-    content: "";
-    display: inline-block;
-    width: 3px;
-    height: 0.95em;
-    margin-right: 10px;
-    border-radius: 2px;
-    background: var(--pink);
-    box-shadow: 0 0 8px var(--pink-glow);
-    vertical-align: middle;
-}
-
-/* 区块编号：01–04，排在标题行最右，等宽数字（装饰，不进正文） */
-main {
-    counter-reset: sec 0;
-}
-
-main section {
-    counter-increment: sec;
-}
-
-h2 {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    padding-block: clamp(30px, 5.4vw, 56px) clamp(20px, 3.2vw, 30px);
 }
 
-h2::after {
-    content: "0" counter(sec);
-    margin-left: auto;
-    padding-left: 16px;
-    color: var(--ink-faint);
-    font-size: 12px;
+.sleeve h1 {
+    margin: 0;
+    font-family: var(--serif);
     font-weight: 400;
-    letter-spacing: 0.16em;
+    font-size: clamp(44px, 9vw, 96px);
+    line-height: 1;
+    letter-spacing: .04em;
+}
+
+.sleeve .handle {
+    /* Noto Serif SC 的 ascent+descent 大于 1em，line-height:1 时字身会溢出 h1 盒底，
+       所以这行间距要比 SimSun 时代留得更开一点，否则 handle 会贴到名字下缘 */
+    margin-top: clamp(14px, 1.8vw, 22px);
+    font-size: 13px;
+    color: var(--ink-2);
+}
+
+.sleeve .line {
+    margin-top: clamp(20px, 3.4vw, 32px);
+    font-size: clamp(16px, 1.5vw, 18px);
+}
+
+.sleeve .lede {
+    margin-top: 8px;
+    max-width: 44ch;
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--ink-2);
+}
+
+/* 封套下缘：年份区间 + 两面锚点，像封套背脊上的一行小字 */
+.spine {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px 24px;
+    margin-top: clamp(32px, 6vw, 64px);
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+}
+
+.span {
+    font-size: 13px;
+    color: var(--ink-2);
     font-variant-numeric: tabular-nums;
 }
 
-h3 {
-    margin: 0;
-    font-size: 17px;
-    letter-spacing: 0;
+.faces {
+    display: flex;
+    gap: clamp(18px, 4vw, 32px);
 }
 
-p {
-    margin: 0 0 16px;
-    max-width: 66ch;
-}
-
-.note {
-    color: var(--ink-soft);
+.faces a {
+    font-family: var(--serif);
     font-size: 15px;
+    letter-spacing: .04em;
+    text-decoration: underline;
+    text-decoration-color: var(--ink-2); /* 链接唯一的可点提示：用 6.03:1 的灰，不用 1.23:1 的 --rule */
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    transition: color .15s, text-decoration-color .15s;
 }
 
-/* ---------- 项目卡片：纯色底 + 1px 细边框 ---------- */
-
-.card {
-    position: relative;
-    isolation: isolate;   /* 让 ::after 的负 z-index 只在本卡片内生效 */
-    overflow: hidden;
-    /* 光斑默认在中心；JS 在 pointermove 时更新成鼠标坐标 */
-    --mx: 50%;
-    --my: 50%;
-    margin-bottom: 14px;
-    padding: 22px 24px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: var(--surface);
-    transition: transform .18s ease-out, border-color .18s ease-out, box-shadow .18s ease-out;
+.faces a:hover {
+    color: var(--blue);
+    text-decoration-color: var(--blue);
 }
 
-/* 跟随鼠标的光斑：放在文字**下面**（z-index:-1），否则半透明粉光会把小字洗到 4.5:1 以下 */
-.card::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    background: radial-gradient(260px circle at var(--mx) var(--my), var(--spot), transparent 62%);
-    opacity: 0;
-    transition: opacity .22s ease-out;
-    pointer-events: none;
+/* ---------- 两面 ---------- */
+
+main {
+    padding-bottom: clamp(8px, 2vw, 16px);
 }
 
-/* 触屏不做悬停态：否则点按后 :hover 粘住，会在卡片中心残留一个固定光斑 */
-@media (hover: hover) {
-    html.js .card:hover::after {
-        opacity: 1;
-    }
+.side {
+    padding-top: clamp(44px, 7.5vw, 80px);
 }
 
-.card-head {
+.side:first-child {
+    padding-top: clamp(36px, 6vw, 64px);
+}
+
+/* 只有 A 面 / B 面两个面标题下面有一条线；制作名单与我的仓库靠上方留白分组 */
+h2 {
+    margin: 0 0 clamp(14px, 2.4vw, 22px);
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(19px, 2.2vw, 23px);
+    letter-spacing: .04em;
+}
+
+.side h2 {
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+}
+
+/* ---------- 曲目表 ---------- */
+
+.tracks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: track;
+}
+
+/* B 面接着 A 面编号：04 起 */
+#side-b .tracks {
+    counter-reset: track 3;
+}
+
+.track {
+    counter-increment: track;
+    padding: clamp(12px, 1.8vw, 16px) 0;
+}
+
+.track-head {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
     gap: 4px 12px;
-    margin-bottom: 10px;
 }
 
-.card p:last-child {
-    margin-bottom: 0;
-}
-
-/* 小标签：字距拉开，弱化灰但保持 ≥4.5:1 */
-.meta {
-    color: var(--ink-faint);
+.track-no {
+    flex: none;
+    min-width: 22px;
     font-size: 13px;
-    letter-spacing: 0.09em;
+    color: var(--blue);
     font-variant-numeric: tabular-nums;
 }
 
-.tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 14px 0 0;
-    padding: 0;
-    list-style: none;
+.track-no::before {
+    content: counter(track, decimal-leading-zero);
 }
 
-/* 元数据标签：无边框 + 极淡底；hover 只加深底，不缩放 */
-.tags li {
-    padding: 2px 9px;
-    border-radius: var(--radius);
-    background: var(--tag-bg);
-    color: var(--ink-faint);
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    transition: background-color .18s ease-out;
+.track-title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(16px, 1.8vw, 19px);
+    letter-spacing: .04em;
 }
 
-/* 触屏设备不做悬停态，避免 hover「粘住」 */
-@media (hover: hover) {
-    .card:hover {
-        transform: translateY(-2px);
-        border-color: rgba(245, 150, 170, .26);
-        box-shadow: 0 0 0 1px rgba(245, 150, 170, .10), 0 10px 30px rgba(26, 29, 33, .08);
-    }
-
-    .tags li:hover {
-        background: var(--tag-bg-strong);
-    }
+/* 引导点：点线，不是省略号字符 */
+.leader {
+    flex: 1 1 24px;
+    min-width: 24px;
+    border-bottom: 1px dotted var(--rule);
+    transform: translateY(-.18em);
 }
 
-/* ---------- 技能 ---------- */
-
-.skills {
-    margin: 0;
+.track-meta {
+    flex: none;
+    font-size: 13px;
+    color: var(--ink-2);
+    font-variant-numeric: tabular-nums;
 }
 
-.skills > div {
-    display: grid;
-    grid-template-columns: 130px 1fr;
-    gap: 16px;
-    padding: 14px 0;
-    border-bottom: 1px dashed var(--line);
-}
-
-.skills > div:last-child {
-    border-bottom: none;
-}
-
-.skills dt {
-    color: var(--ink);
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.skills dd {
-    margin: 0;
+.track-note {
+    margin-top: 6px;
+    padding-left: 34px;
     max-width: 62ch;
-    color: var(--ink-soft);
+    font-size: 15px;
+    color: var(--ink-2);
+}
+
+.track-credits {
+    margin-top: 5px;
+    padding-left: 34px;
+    font-size: 13px;
+    color: var(--ink-2);
+}
+
+/* B 面的条目是一句话，不排成标题 + 注释 */
+.lines .track-title {
+    font-size: clamp(15px, 1.6vw, 17px);
+    line-height: 1.8;
+    letter-spacing: .02em;
+}
+
+/* ---------- 制作名单 ---------- */
+
+/* 没有标题下的横线，靠上方留白与前一块分组 */
+.credits {
+    padding-top: clamp(52px, 9vw, 92px);
+}
+
+.credits-list > div {
+    display: grid;
+    grid-template-columns: 8em 1fr;
+    gap: 6px clamp(16px, 3vw, 32px);
+    padding: 10px 0;
+}
+
+.credits dt {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: .04em;
+}
+
+.credits dd {
+    color: var(--ink-2);
     font-size: 15px;
 }
 
-/* ---------- 兴趣：无 emoji、无前导标记，只靠行距分隔 ---------- */
+/* ---------- 页脚：仓库与别处 ---------- */
 
-.interests {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.interests li {
-    padding: 7px 0;
-    color: var(--ink-soft);
-    line-height: 1.8;
-}
-
-/* ---------- 仓库 ---------- */
-
+/* 我的仓库在 footer 里，自身不留上边距：与上一块的分组间距由 footer 的 margin-top 给 */
 .repos {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    padding-top: 0;
 }
 
-.repos li {
+.elsewhere {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.elsewhere li {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 12px;
-    padding: 12px 0;
-    border-bottom: 1px dashed var(--line);
-    transition: background-color .18s ease-out;
+    gap: 4px 12px;
+    padding: 8px 0;
 }
 
-.repos li:last-child {
-    border-bottom: none;
+.elsewhere a {
+    text-decoration: underline;
+    text-decoration-color: var(--ink-2); /* 同 .faces a：链接唯一的可点提示要看得见 */
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: color .15s, text-decoration-color .15s;
 }
 
-.repos a {
-    color: var(--ink);
-    font-weight: 600;
+.elsewhere a:hover {
+    color: var(--blue);
+    text-decoration-color: var(--blue);
 }
 
 .repo-desc {
-    color: var(--ink-faint);
     font-size: 13px;
-    letter-spacing: 0.08em;
-    font-variant-numeric: tabular-nums;
+    color: var(--ink-2);
 }
 
-/* hover：整行极淡底 wash，用外扩阴影模拟左右 padding，不造成布局位移 */
-@media (hover: hover) {
-    .repos li:hover {
-        background-color: var(--wash);
-        box-shadow: -12px 0 0 var(--wash), 12px 0 0 var(--wash);
-    }
+/* 页脚最后一行：github.com/beiwei91 · 博客（沿用旧站的那一行，含分隔点） */
+.elsewhere-links {
+    gap: 8px;
+    margin-top: 10px;
 }
 
-/* ---------- 页脚 ---------- */
+.sep {
+    color: var(--ink-2);
+}
 
 footer {
-    margin-top: 64px;
-    padding: 28px 0 56px; /* 左右 padding 交给 .wrap，避免叠加 */
-    border-top: 1px solid var(--rule);
-    color: var(--ink-faint);
+    margin-top: clamp(52px, 9vw, 92px);
+    padding-bottom: clamp(28px, 5vw, 56px);
+}
+
+.note {
+    margin-top: clamp(22px, 4vw, 36px);
     font-size: 13px;
-    letter-spacing: 0.06em;
+    color: var(--ink-2);
 }
 
-footer a {
-    color: var(--ink-soft);
-}
-
-footer a:hover {
-    color: var(--ink);
-}
-
-footer .note {
-    margin: 8px 0 0;
-    font-size: 13px;
-    color: var(--ink-faint);
-}
-
-/* ---------- 404（没有固定顶栏，所以不留顶栏高度） ---------- */
+/* ---------- 404 ---------- */
 
 .notfound {
-    padding: 132px 0 160px; /* 左右 padding 交给 .wrap */
+    padding-block: clamp(88px, 18vh, 200px);
 }
 
 .notfound .code {
-    margin: 0;
-    color: var(--ink-faint);
     font-size: 13px;
-    letter-spacing: 0.24em;
+    color: var(--ink-2);
+    font-variant-numeric: tabular-nums;
 }
 
 .notfound h1 {
-    margin: 10px 0 18px;
-    font-size: clamp(28px, 5vw, 34px);
-    line-height: 1.2;
-    letter-spacing: -0.01em;
+    margin: 8px 0 clamp(16px, 2.6vw, 22px);
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(32px, 5.5vw, 44px);
+    letter-spacing: .04em;
 }
 
 .notfound p {
-    max-width: 52ch;
-    color: var(--ink-soft);
-    line-height: 1.85;
+    max-width: 46ch;
+    color: var(--ink-2);
 }
 
 .notfound .back {
-    margin-top: 26px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(18px, 4vw, 28px);
+    margin-top: clamp(24px, 4vw, 32px);
 }
 
 .notfound .back a {
-    display: inline-block;
-    margin: 0 22px 8px 0;
-    padding: 0;
-    color: var(--ink-soft);
-    font-size: 13px;
-    letter-spacing: 0.1em;
-    text-decoration: none;
-    transition: color .18s ease-out;
+    text-decoration: underline;
+    text-decoration-color: var(--ink-2);
+    text-underline-offset: 4px;
+    transition: color .15s, text-decoration-color .15s;
 }
 
 .notfound .back a:hover {
-    color: var(--ink);
+    color: var(--blue);
+    text-decoration-color: var(--blue);
 }
 
 /* ---------- 窄屏 ---------- */
 
-@media (max-width: 600px) {
-    .wrap {
-        padding: 0 22px;
-    }
-
-    .nav a {
-        margin-right: 16px;
-        font-size: 12.5px;
-        letter-spacing: 0.08em;
-    }
-
-    .hero {
-        padding: calc(var(--bar-h) + 40px) 0 44px;
-    }
-
-    .hero h1 {
-        font-size: clamp(27px, 8.4vw, 34px);
-    }
-
-    .hero h1 .handle {
-        display: block;
-        margin: 8px 0 0;
-    }
-
-    main section {
-        padding: 44px 0 4px;
-    }
-
-    main section:first-child {
-        padding-top: 48px;
-    }
-
-    h2 {
-        font-size: 18px;
-        margin-bottom: 22px;
-    }
-
-    .card {
-        padding: 18px 18px;
-    }
-
-    .skills > div {
+@media (max-width: 560px) {
+    .credits-list > div {
         grid-template-columns: 1fr;
-        gap: 4px;
+        gap: 2px;
+        padding: 11px 0;
     }
 
-    .notfound {
-        padding: 88px 0 112px;
+    /* 窄屏一行放不下「编号 + 标题 + 引导点 + 日期」：改成两行。
+       用两列 grid 做悬挂缩进：编号列 34px，标题与日期都从 34px 起，
+       标题换行时续行也自然对齐 34px（与 note 的 34px 一致）。 */
+    .track-head {
+        display: grid;
+        grid-template-columns: 34px 1fr;
+        align-items: baseline; /* 13px 的曲目号与 17px 的标题共享基線 */
+        gap: 2px 0;
+    }
+
+    .track-no {
+        grid-column: 1;
+    }
+
+    .track-title {
+        grid-column: 2;
+    }
+
+    .track-meta {
+        grid-column: 2;
+        margin-top: 2px;
+    }
+
+    .leader {
+        display: none;
+    }
+
+    /* 窄屏 title 提到 17px，保持 title > note(15px) 的层级 */
+    .track .track-title {
+        font-size: 17px;
+    }
+
+    .cover::after {
+        right: 8px;
     }
 }
 
-/* ---------- 减少动效：关掉全部进场 / 滚动 / hover 位移 / 进度线 ---------- */
-/* 本段与后面的深色块没有属性交集（深色块只改颜色变量），不存在互相覆盖。 */
+/* ---------- 减少动效：唯一那条载入动效也不播 ---------- */
 
 @media (prefers-reduced-motion: reduce) {
-
-    *,
-    *::before,
-    *::after {
-        animation: none !important;
-        transition: none !important;
-        scroll-behavior: auto !important;
-    }
-
-    html.js .fade-up,
-    html.js .reveal {
-        opacity: 1 !important;
-        transform: none !important;
-    }
-
-    /* 进度线在 JS 侧就不会被创建；这里再兜一层 */
-    html.js .progress {
-        display: none !important;
-    }
-
-    /* 卡片 hover 位移在 reduce 下一律关掉（不加 html.js 前缀：无 JS 时也生效） */
-    .card:hover {
-        transform: none !important;
-        box-shadow: none !important;
-    }
-
-    /* 跟随鼠标的光斑也是动效：关掉 */
-    .card::after {
-        display: none !important;
-    }
-}
-
-/* ---------- 深色模式：真正的深色底 ---------- */
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        color-scheme: dark;
-
-        --pink: #f0a8b8;
-        --pink-soft: #2a1d22;
-        --pink-glow: rgba(240, 168, 184, .36);
-
-        --ink: #e9ebef;        /* 16.08:1 on #0d0f12 */
-        --ink-soft: #a8b0bc;   /* 8.77:1 on #0d0f12 */
-        --ink-faint: #9099a6;  /* 6.67:1 on #0d0f12 */
-        --muted: #5f6772;
-
-        --line: #262b33;
-        --rule: #313741;
-        --tag-bg: #1a1c1f;
-        --tag-bg-strong: #212326;
-        --wash: rgba(233, 235, 239, .035);
-        --grid: rgba(233, 235, 239, .05);
-        --spot: rgba(240, 168, 184, .16);
-        --bg: #0d0f12;
-        --surface: #0d0f12;
-        --bar-bg: rgba(13, 15, 18, .90);
-        --focus: #f0a8b8;
-    }
-
-    /* 深色下 hero 光晕再淡一点，避免在近黑底上出现可见色块 */
-    .hero::before {
-        background-image:
-            radial-gradient(120% 92% at 50% -14%, rgba(240, 168, 184, .09), rgba(240, 168, 184, 0) 66%),
-            linear-gradient(to right, var(--grid) 1px, transparent 1px),
-            linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
-    }
-}
-
-/* 深色 + 可悬停：卡片阴影换成暗色，但仍保留一点粉色描边 */
-@media (prefers-color-scheme: dark) and (hover: hover) {
-    .card:hover {
-        border-color: rgba(240, 168, 184, .24);
-        box-shadow: 0 0 0 1px rgba(240, 168, 184, .10), 0 10px 30px rgba(0, 0, 0, .5);
+    .cover::after {
+        animation: none;
     }
 }

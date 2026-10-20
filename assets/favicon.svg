@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="beiwei91">
-  <rect width="64" height="64" rx="14" fill="#f596aa"/>
-  <g stroke="#ffffff" stroke-width="4" stroke-linecap="round">
+  <rect width="64" height="64" rx="14" fill="#33496b"/>
+  <g stroke="#f1f2f0" stroke-width="4" stroke-linecap="round">
     <path d="M13 23h38"/>
     <path d="M13 41h38"/>
   </g>
-  <circle cx="32" cy="32" r="8.5" fill="#ffffff"/>
+  <circle cx="32" cy="32" r="8.5" fill="#f1f2f0"/>
 </svg>

@@ -8,8 +8,8 @@
     <meta name="description" content="beiwei91（北纬91）的主页：做过的东西、技能、几个爱好。">
     <meta name="author" content="beiwei91">
     <link rel="canonical" href="https://beiwei91.github.io/">
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#0d0f12" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f1f2f0" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#121417" media="(prefers-color-scheme: dark)">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="zh_CN">
     <meta property="og:title" content="北纬91 · beiwei91">
@@ -22,262 +22,171 @@
 <body>
     <a class="skip-link" href="#main">跳到主要内容</a>
 
-    <!-- 固定顶栏：无 JS 时常驻不透明；有 JS 时在页面顶部透明、滚动后浮现背景 -->
-    <header class="topbar" id="topbar">
-        <div class="wrap">
-            <nav class="nav" aria-label="页面导航">
-                <a href="#work">项目</a>
-                <a href="#skills">技能</a>
-                <a href="#interests">兴趣</a>
-                <a href="#repos">仓库</a>
-                <a href="https://github.com/beiwei91" target="_blank" rel="noopener noreferrer">GitHub</a>
-                <a href="https://beiwei91.github.io/myblog/" target="_blank" rel="noopener noreferrer">博客</a>
-            </nav>
-        </div>
-        <!-- 阅读进度：只在 html.js 下生效 -->
-        <div class="progress" aria-hidden="true"></div>
-    </header>
-
-    <div class="hero">
-        <div class="wrap">
-            <h1 class="fade-up">北纬91 <span class="handle">beiwei91</span></h1>
-            <p class="tagline fade-up">专业是地理信息科学，方向是计算机。</p>
-            <p class="lede fade-up">
+    <div class="cover">
+        <header class="sleeve col">
+            <h1>北纬91</h1>
+            <p class="handle">beiwei91</p>
+            <p class="line">专业是地理信息科学，方向是计算机。</p>
+            <p class="lede">
                 课外的几门计算机核心课都是自己看的。
                 自己也写点小东西，课设和团队项目也做过。
                 剩下的时间弹吉他、看动漫、打游戏。
             </p>
-        </div>
+            <div class="spine">
+                <p class="span">2023—2027</p>
+                <nav class="faces" aria-label="页面导航">
+                    <a href="#side-a">A 面</a>
+                    <a href="#side-b">B 面</a>
+                </nav>
+            </div>
+        </header>
+
+        <main id="main" class="col">
+
+            <section id="side-a" class="side">
+                <h2>A 面</h2>
+                <ol class="tracks" role="list">
+                    <li class="track">
+                        <div class="track-head">
+                            <span class="track-no" aria-hidden="true"></span>
+                            <span class="track-title">resume-generator（简历生成器）</span>
+                            <span class="leader" aria-hidden="true"></span>
+                            <span class="track-meta">2026.09–至今</span>
+                        </div>
+                        <p class="track-note">
+                            个人项目，vibe coding 出来的。需求我自己定，代码大部分交给 AI 写。
+                            挂到 GitHub 上，有 4 个 star。
+                        </p>
+                        <p class="track-credits">JavaScript、AI 辅助开发</p>
+                    </li>
+                    <li class="track">
+                        <div class="track-head">
+                            <span class="track-no" aria-hidden="true"></span>
+                            <span class="track-title">古村落智慧消防系统</span>
+                            <span class="leader" aria-hidden="true"></span>
+                            <span class="track-meta">2025.09–2025.11</span>
+                        </div>
+                        <p class="track-note">
+                            团队项目。我负责<strong>矢量化数据采集</strong>，
+                            用 ArcGIS 把古村落的建筑物、道路描成矢量数据，给队友用。
+                        </p>
+                        <p class="track-credits">ArcGIS、矢量化、数据采集</p>
+                    </li>
+                    <li class="track">
+                        <div class="track-head">
+                            <span class="track-no" aria-hidden="true"></span>
+                            <span class="track-title">地质灾害分布可视化</span>
+                            <span class="leader" aria-hidden="true"></span>
+                            <span class="track-meta">2025.05–2025.06</span>
+                        </div>
+                        <p class="track-note">
+                            课设。Spring Boot 写了灾害点数据的查询和分类过滤接口，
+                            MySQL 建表、批量导入数千条数据，查询字段建了索引；
+                            Leaflet 做地图叠加，ECharts 出统计图。
+                        </p>
+                        <p class="track-credits">Spring Boot、MySQL、Leaflet、ECharts</p>
+                    </li>
+                </ol>
+            </section>
+
+            <section id="side-b" class="side">
+                <h2>B 面</h2>
+                <ol class="tracks lines" role="list">
+                    <li class="track">
+                        <div class="track-head">
+                            <span class="track-no" aria-hidden="true"></span>
+                            <span class="track-title">弹吉他。小学四年级开始，木吉他，现在主要玩电吉他，组过乐队，但弹得不算好</span>
+                        </div>
+                    </li>
+                    <li class="track">
+                        <div class="track-head">
+                            <span class="track-no" aria-hidden="true"></span>
+                            <span class="track-title">日摇和 J-POP，最喜欢 <strong>Yorushika</strong></span>
+                        </div>
+                    </li>
+                    <li class="track">
+                        <div class="track-head">
+                            <span class="track-no" aria-hidden="true"></span>
+                            <span class="track-title">看动漫，入坑作不太记得了</span>
+                        </div>
+                    </li>
+                    <li class="track">
+                        <div class="track-head">
+                            <span class="track-no" aria-hidden="true"></span>
+                            <span class="track-title">游戏：明日方舟、怪物猎人</span>
+                        </div>
+                    </li>
+                    <li class="track">
+                        <div class="track-head">
+                            <span class="track-no" aria-hidden="true"></span>
+                            <span class="track-title">咖啡，没什么特别的偏好</span>
+                        </div>
+                    </li>
+                </ol>
+            </section>
+
+            <section id="credits" class="credits">
+                <h2>制作名单</h2>
+                <dl class="credits-list">
+                    <div>
+                        <dt>课程外自学</dt>
+                        <dd>计算机网络、计算机组成原理、操作系统、算法设计</dd>
+                    </div>
+                    <div>
+                        <dt>写代码</dt>
+                        <dd>C / C++，常用语法、数据结构、算法实现</dd>
+                    </div>
+                    <div>
+                        <dt>后端、数据库</dt>
+                        <dd>Spring Boot 写接口；MySQL 建表、增删改查、基础索引</dd>
+                    </div>
+                    <div>
+                        <dt>地图、图表</dt>
+                        <dd>ArcGIS 矢量化与常规空间数据处理；Leaflet 地图；ECharts 图表</dd>
+                    </div>
+                    <div>
+                        <dt>AI 辅助开发</dt>
+                        <dd>resume-generator 就是这么做出来的，我定需求、AI 写代码，最后挂到 GitHub</dd>
+                    </div>
+                    <div>
+                        <dt>平时在用的</dt>
+                        <dd>Git、Linux 常用命令；ChatGPT / Claude / DeepSeek / Cursor</dd>
+                    </div>
+                </dl>
+            </section>
+
+        </main>
+
+        <footer class="col">
+            <section id="repos" class="repos">
+                <h2>我的仓库</h2>
+                <ul class="elsewhere">
+                    <li>
+                        <a href="https://github.com/beiwei91/resume-generator" target="_blank" rel="noopener noreferrer">resume-generator</a>
+                        <span class="repo-desc">简历生成器 · JavaScript · 4 stars</span>
+                    </li>
+                    <li>
+                        <a href="https://github.com/beiwei91/lasProcess" target="_blank" rel="noopener noreferrer">lasProcess</a>
+                        <span class="repo-desc">C++</span>
+                    </li>
+                    <li>
+                        <a href="https://github.com/beiwei91/myblog" target="_blank" rel="noopener noreferrer">myblog</a>
+                        <span class="repo-desc">博客源码 · HTML</span>
+                    </li>
+                    <li>
+                        <a href="https://github.com/beiwei91/beiwei91.github.io" target="_blank" rel="noopener noreferrer">beiwei91.github.io</a>
+                        <span class="repo-desc">本站源码</span>
+                    </li>
+                    <li class="elsewhere-links">
+                        <a href="https://github.com/beiwei91" target="_blank" rel="noopener noreferrer">github.com/beiwei91</a>
+                        <span class="sep">·</span>
+                        <a href="https://beiwei91.github.io/myblog/" target="_blank" rel="noopener noreferrer">博客</a>
+                    </li>
+                </ul>
+            </section>
+            <p class="note">© beiwei91</p>
+        </footer>
     </div>
-
-    <main id="main" class="wrap">
-
-        <section id="work">
-            <h2>项目</h2>
-
-            <article class="card">
-                <div class="card-head">
-                    <h3>resume-generator（简历生成器）</h3>
-                    <span class="meta">2026.09–至今</span>
-                </div>
-                <p>
-                    个人项目，vibe coding 出来的。需求我自己定，代码大部分交给 AI 写。
-                    挂到 GitHub 上，有 4 个 star。
-                </p>
-                <ul class="tags">
-                    <li>JavaScript</li>
-                    <li>AI 辅助开发</li>
-                </ul>
-            </article>
-
-            <article class="card">
-                <div class="card-head">
-                    <h3>古村落智慧消防系统</h3>
-                    <span class="meta">2025.09–2025.11</span>
-                </div>
-                <p>
-                    团队项目。我负责<strong>矢量化数据采集</strong>，
-                    用 ArcGIS 把古村落的建筑物、道路描成矢量数据，给队友用。
-                </p>
-                <ul class="tags">
-                    <li>ArcGIS</li>
-                    <li>矢量化</li>
-                    <li>数据采集</li>
-                </ul>
-            </article>
-
-            <article class="card">
-                <div class="card-head">
-                    <h3>地质灾害分布可视化</h3>
-                    <span class="meta">2025.05–2025.06</span>
-                </div>
-                <p>
-                    课设。Spring Boot 写了灾害点数据的查询和分类过滤接口，
-                    MySQL 建表、批量导入数千条数据，查询字段建了索引；
-                    Leaflet 做地图叠加，ECharts 出统计图。
-                </p>
-                <ul class="tags">
-                    <li>Spring Boot</li>
-                    <li>MySQL</li>
-                    <li>Leaflet</li>
-                    <li>ECharts</li>
-                </ul>
-            </article>
-        </section>
-
-        <section id="skills">
-            <h2>技能</h2>
-            <dl class="skills">
-                <div>
-                    <dt>课程外自学</dt>
-                    <dd>计算机网络、计算机组成原理、操作系统、算法设计</dd>
-                </div>
-                <div>
-                    <dt>写代码</dt>
-                    <dd>C / C++，常用语法、数据结构、算法实现</dd>
-                </div>
-                <div>
-                    <dt>后端、数据库</dt>
-                    <dd>Spring Boot 写接口；MySQL 建表、增删改查、基础索引</dd>
-                </div>
-                <div>
-                    <dt>地图、图表</dt>
-                    <dd>ArcGIS 矢量化与常规空间数据处理；Leaflet 地图；ECharts 图表</dd>
-                </div>
-                <div>
-                    <dt>AI 辅助开发</dt>
-                    <dd>resume-generator 就是这么做出来的，我定需求、AI 写代码，最后挂到 GitHub</dd>
-                </div>
-                <div>
-                    <dt>平时在用的</dt>
-                    <dd>Git、Linux 常用命令；ChatGPT / Claude / DeepSeek / Cursor</dd>
-                </div>
-            </dl>
-        </section>
-
-        <section id="interests">
-            <h2>兴趣</h2>
-            <ul class="interests">
-                <li>弹吉他。小学四年级开始，木吉他，现在主要玩电吉他，组过乐队，但弹得不算好</li>
-                <li>日摇和 J-POP，最喜欢 <strong>Yorushika</strong></li>
-                <li>看动漫，入坑作不太记得了</li>
-                <li>游戏：明日方舟、怪物猎人</li>
-                <li>咖啡，没什么特别的偏好</li>
-            </ul>
-        </section>
-
-        <section id="repos">
-            <h2>我的仓库</h2>
-            <ul class="repos">
-                <li>
-                    <a href="https://github.com/beiwei91/resume-generator" target="_blank" rel="noopener noreferrer">resume-generator</a>
-                    <span class="repo-desc">简历生成器 · JavaScript · 4 stars</span>
-                </li>
-                <li>
-                    <a href="https://github.com/beiwei91/lasProcess" target="_blank" rel="noopener noreferrer">lasProcess</a>
-                    <span class="repo-desc">C++</span>
-                </li>
-                <li>
-                    <a href="https://github.com/beiwei91/myblog" target="_blank" rel="noopener noreferrer">myblog</a>
-                    <span class="repo-desc">博客源码 · HTML</span>
-                </li>
-                <li>
-                    <a href="https://github.com/beiwei91/beiwei91.github.io" target="_blank" rel="noopener noreferrer">beiwei91.github.io</a>
-                    <span class="repo-desc">本站源码</span>
-                </li>
-            </ul>
-        </section>
-
-    </main>
-
-    <footer class="wrap">
-        <p>
-            <a href="https://github.com/beiwei91" target="_blank" rel="noopener noreferrer">github.com/beiwei91</a>
-            ·
-            <a href="https://beiwei91.github.io/myblog/" target="_blank" rel="noopener noreferrer">博客</a>
-        </p>
-        <p class="note">© beiwei91</p>
-    </footer>
-
-    <script>
-        /* 渐进增强：脚本失效 / 被禁用 / 不支持 IO 时什么都不做，页面按纯 CSS 默认状态渲染，内容全部可见 */
-        (function () {
-            if (!('IntersectionObserver' in window)) { return; }
-            var root = document.documentElement;
-            /* 保险丝：.js 之后任何一步出错，都摘掉 .js 回到「全部可见」的无 JS 状态 */
-            try {
-                root.classList.add('js');
-                var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-                var bar = document.querySelector('.progress');
-                var topbar = document.getElementById('topbar');
-
-                /* 顶栏：顶部透明，滚动后浮现背景 */
-                if (topbar) {
-                    var setBar = function () {
-                        topbar.classList.toggle('is-scrolled', window.scrollY > 8);
-                    };
-                    window.addEventListener('scroll', setBar, { passive: true });
-                    window.addEventListener('resize', setBar, { passive: true });
-                    setBar();
-                }
-
-                if (!reduce && bar) {
-                    var ticking = false;
-                    var draw = function () {
-                        ticking = false;
-                        var max = document.documentElement.scrollHeight - window.innerHeight;
-                        var ratio = max > 0 ? window.scrollY / max : 0;
-                        bar.style.transform = 'scaleX(' + Math.min(1, Math.max(0, ratio)) + ')';
-                    };
-                    var onScroll = function () {
-                        if (!ticking) { ticking = true; window.requestAnimationFrame(draw); }
-                    };
-                    window.addEventListener('scroll', onScroll, { passive: true });
-                    window.addEventListener('resize', onScroll, { passive: true });
-                    draw();
-                }
-
-                /* 导航高亮：视口中线落在哪个 section，就点亮哪个链接 */
-                var sections = document.querySelectorAll('main section[id]');
-                var navLinks = document.querySelectorAll('.topbar .nav a[href^="#"]');
-                if (sections.length && navLinks.length) {
-                    var map = {};
-                    for (var k = 0; k < navLinks.length; k++) { map[navLinks[k].getAttribute('href')] = navLinks[k]; }
-                    var ioNav = new IntersectionObserver(function (entries) {
-                        for (var i = 0; i < entries.length; i++) {
-                            if (!entries[i].isIntersecting) { continue; }
-                            var active = map['#' + entries[i].target.id];
-                            for (var j = 0; j < navLinks.length; j++) { navLinks[j].classList.remove('is-active'); }
-                            if (active) { active.classList.add('is-active'); }
-                        }
-                    }, { rootMargin: '-45% 0px -45% 0px' });
-                    for (var s = 0; s < sections.length; s++) { ioNav.observe(sections[s]); }
-                }
-
-                /* 卡片光斑：鼠标在卡片内移动时更新光斑中心（纯装饰；无 JS / reduce 时不出现）
-                   用 rAF 节流：每帧最多更新一次，避免高频 pointermove 反复重绘渐变 */
-                if (!reduce && window.matchMedia && window.matchMedia('(hover: hover)').matches) {
-                    var cards = document.querySelectorAll('.card');
-                    var track = function (e) {
-                        var el = this;
-                        var x = e.clientX;
-                        var y = e.clientY;
-                        if (el.raf) { return; }
-                        el.raf = window.requestAnimationFrame(function () {
-                            var r = el.getBoundingClientRect();
-                            el.style.setProperty('--mx', (x - r.left) + 'px');
-                            el.style.setProperty('--my', (y - r.top) + 'px');
-                            el.raf = null;
-                        });
-                    };
-                    for (var n = 0; n < cards.length; n++) {
-                        cards[n].addEventListener('pointermove', track, { passive: true });
-                    }
-                }
-
-                if (!reduce) {
-                    /* 滚动进场只触发一次；同批错开 60ms，封顶 240ms（240 + 460 < 700） */
-                    var items = document.querySelectorAll('main section, .card, .repos li, .skills > div');
-                    var io = new IntersectionObserver(function (entries) {
-                        var done = 0;
-                        for (var m = 0; m < entries.length; m++) {
-                            if (!entries[m].isIntersecting) { continue; }
-                            entries[m].target.style.transitionDelay = Math.min(done * 60, 240) + 'ms';
-                            entries[m].target.classList.add('is-in');
-                            io.unobserve(entries[m].target);
-                            done++;
-                        }
-                    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.01 });
-                    for (var t = 0; t < items.length; t++) {
-                        items[t].classList.add('reveal');
-                        io.observe(items[t]);
-                    }
-                }
-            } catch (e) {
-                root.classList.remove('js');
-            }
-        })();
-    </script>
 
 </body>
 
