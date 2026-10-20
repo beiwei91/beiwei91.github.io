@@ -1,6 +1,6 @@
 /* 北纬91 · 一张唱片的封套
    零依赖：无外部字体、无 CDN、无脚本。
-   纸张 + 夜蓝 + 宋体；只有一条动效：载入时唱片从封套里滑出 10px。 */
+   纸张 + 夜蓝 + 宋体；两条动效：载入时唱片滑出 10px + 滚动驱动的唱片旋转。 */
 
 :root {
     color-scheme: light dark;
@@ -20,6 +20,7 @@
 
     --col: 820px;
     --pad: clamp(18px, 4vw, 28px);
+    --disc: clamp(220px, 30vw, 400px); /* 唱片直径（只影响装饰图形，不进布局） */
 }
 
 /* 深色不是反色：另配一套纸与墨 */
@@ -110,37 +111,79 @@ a:hover {
 /* ---------- 封套：整页就是一张唱片背面 ---------- */
 
 /* 外框包住封套头 + 两面 + credits + 页脚；框线在 .col 内容列外侧，
-   max-width 比内容列宽 40px，靠 .col 的 auto 外边距抵消，左基线不变 */
+   max-width 比内容列宽 40px，靠 .col 的 auto 外边距抵消，左基线不变。
+   overflow: hidden 用来把唱片的圆弧裁在框内，只剩一道弧；
+   isolation: isolate 让唱片那层负 z-index 被关在封套的堆叠上下文里。 */
 .cover {
     position: relative;
+    isolation: isolate;
+    overflow: hidden;
     max-width: calc(var(--col) + 40px);
     margin: clamp(16px, 3vw, 32px) auto clamp(24px, 4vw, 48px);
     border: 1px solid var(--frame);
 }
 
-/* 唱片露出的边缘：一条夜蓝细线，通高（从封套顶到底），
-   载入时从套内滑出 10px —— 这是全站唯一的动效。
-   用 --blue 而不是 --rule：--rule 在纸白上只有 1.23:1，那条线会看不见。 */
-.cover::after {
-    content: "";
+/* ---------- 唱片：从封套右上角露出一角（纯装饰） ---------- */
+
+/* 外层只承载「载入抽出」；内层 svg 承载滚动旋转。
+   两条动效分在两个元素上，避免互相覆盖 transform。 */
+.record-wrap {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 12px;
-    width: 1px;
-    background: var(--blue);
-    animation: record-out .7s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    z-index: -1; /* 压在所有文字下面 */
+    top: calc(var(--disc) * -0.45);
+    right: calc(var(--disc) * -0.55);
+    width: var(--disc);
+    animation: record-in .76s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 
-@keyframes record-out {
+.record {
+    display: block;
+    width: 100%;
+    height: auto;
+    color: var(--ink); /* 沟槽用 currentColor，深色模式自动反色 */
+}
+
+/* 细线不随 svg 缩放变细：768/360 下唱片只有 0.58/0.55 倍，不设这个会把 1px 沟槽压成亚像素糊线 */
+.record circle,
+.record line {
+    vector-effect: non-scaling-stroke;
+}
+
+@keyframes record-in {
     from {
         opacity: 0;
-        transform: translateX(-10px);
+        transform: translate(10px, 10px) rotate(-6deg);
     }
 
     to {
         opacity: 1;
-        transform: translateX(0);
+        transform: translate(0, 0) rotate(0);
+    }
+}
+
+/* 滚动驱动旋转：只有支持 scroll() 时间线的浏览器才转（Chrome/Edge）。
+   Safari / Firefox 不支持则唱片静止，不加 JS 降级。
+   用长写而不是简写：简写会把 duration 写成 0s，个别 Chrome 会当成 0s 时间动画直接跳到 110° 卡住；
+   这里的 1s 只是兜底，真正驱动它的是滚动时间线。 */
+@supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+        .record {
+            animation-name: spin;
+            animation-duration: 1s;
+            animation-timing-function: linear;
+            animation-fill-mode: both;
+            animation-timeline: scroll(root block);
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(110deg);
+            }
+        }
     }
 }
 
@@ -410,10 +453,29 @@ footer {
     padding-bottom: clamp(28px, 5vw, 56px);
 }
 
-.note {
+/* 页脚末行：© 在左，条形码在右（像唱片背面的厂牌行） */
+.colophon {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 24px;
     margin-top: clamp(22px, 4vw, 36px);
+}
+
+.note {
+    margin-top: 0;
     font-size: 13px;
     color: var(--ink-2);
+}
+
+/* 条形码：纯装饰，无数字无文字；颜色跟 --ink，深色模式自动适配。
+   120px = viewBox 的 1:1，最细条精确 1px，不再是亚像素灰。 */
+.barcode {
+    display: block;
+    width: 120px;
+    height: auto;
+    color: var(--ink);
 }
 
 /* ---------- 404 ---------- */
@@ -501,15 +563,16 @@ footer {
         font-size: 17px;
     }
 
-    .cover::after {
-        right: 8px;
+    /* 窄屏条形码缩到 96px（24 根条仍能分辨，不至于糊成一块） */
+    .barcode {
+        width: 96px;
     }
 }
 
-/* ---------- 减少动效：唯一那条载入动效也不播 ---------- */
+/* ---------- 减少动效：入场与滚动旋转都关，唱片直接以终态显示 ---------- */
 
 @media (prefers-reduced-motion: reduce) {
-    .cover::after {
+    .record-wrap {
         animation: none;
     }
 }

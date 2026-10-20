@@ -23,6 +23,47 @@
     <a class="skip-link" href="#main">跳到主要内容</a>
 
     <div class="cover">
+        <!-- 唱片：纯装饰，z-index:-1 压在所有文字下面，从封套右上角露出一角 -->
+        <div class="record-wrap">
+            <svg class="record" aria-hidden="true" focusable="false" viewBox="0 0 400 400">
+                <g transform="translate(200 200)" fill="none" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke">
+                    <circle r="196" opacity="0.5"/>
+                    <circle r="189" opacity="0.26"/>
+                    <circle r="181" opacity="0.31"/>
+                    <circle r="176" opacity="0.22"/>
+                    <circle r="167" opacity="0.28"/>
+                    <circle r="161" opacity="0.19"/>
+                    <circle r="152" opacity="0.33"/>
+                    <circle r="147" opacity="0.24"/>
+                    <circle r="139" opacity="0.29"/>
+                    <circle r="133" opacity="0.21"/>
+                    <circle r="124" opacity="0.35"/>
+                    <circle r="119" opacity="0.25"/>
+                    <circle r="110" opacity="0.3"/>
+                    <circle r="104" opacity="0.2"/>
+                    <circle r="96" opacity="0.32"/>
+                    <circle r="91" opacity="0.23"/>
+                    <circle r="82" opacity="0.27"/>
+                    <circle r="77" opacity="0.36"/>
+                    <circle r="68" opacity="0.22"/>
+                    <circle r="63" opacity="0.3"/>
+                    <circle r="54" opacity="0.19"/>
+                    <circle r="49" opacity="0.34"/>
+                    <circle r="46" opacity="0.41"/>
+                </g>
+                <g transform="translate(200 200)" stroke="currentColor" stroke-width="1.2" opacity="0.5" vector-effect="non-scaling-stroke">
+                    <line x1="196" y1="0" x2="170" y2="0"/>
+                    <line x1="60.57" y1="186.41" x2="52.54" y2="161.68"/>
+                    <line x1="-158.56" y1="115.21" x2="-137.53" y2="99.93"/>
+                    <line x1="-158.56" y1="-115.21" x2="-137.53" y2="-99.93"/>
+                    <line x1="60.57" y1="-186.41" x2="52.54" y2="-161.68"/>
+                </g>
+                <circle cx="200" cy="200" r="44" fill="none" stroke="var(--blue)" stroke-width="0.8" opacity="0.7"/>
+                <circle cx="200" cy="200" r="38" fill="var(--blue)"/>
+                <circle cx="200" cy="200" r="3.5" fill="var(--paper)"/>
+            </svg>
+        </div>
+
         <header class="sleeve col">
             <h1>北纬91</h1>
             <p class="handle">beiwei91</p>
@@ -184,7 +225,36 @@
                     </li>
                 </ul>
             </section>
-            <p class="note">© beiwei91</p>
+            <div class="colophon">
+                <p class="note">© beiwei91</p>
+                <!-- 唱片背面的条形码：纯装饰，不带任何数字与文字 -->
+                <svg class="barcode" aria-hidden="true" focusable="false" viewBox="0 0 120 28" fill="currentColor">
+                        <rect x="2.5" y="0" width="2" height="28"/>
+                        <rect x="7.42" y="0" width="1.5" height="28"/>
+                        <rect x="11.83" y="0" width="1" height="28"/>
+                        <rect x="15.75" y="0" width="2.5" height="28"/>
+                        <rect x="23.25" y="0" width="1" height="28"/>
+                        <rect x="27.17" y="0" width="1.5" height="28"/>
+                        <rect x="31.58" y="0" width="2" height="28"/>
+                        <rect x="36.5" y="0" width="1" height="28"/>
+                        <rect x="40.42" y="0" width="1" height="28"/>
+                        <rect x="45.92" y="0" width="2.5" height="28"/>
+                        <rect x="51.33" y="0" width="1.5" height="28"/>
+                        <rect x="55.75" y="0" width="1" height="28"/>
+                        <rect x="59.67" y="0" width="2" height="28"/>
+                        <rect x="67.17" y="0" width="1" height="28"/>
+                        <rect x="71.08" y="0" width="2.5" height="28"/>
+                        <rect x="76.5" y="0" width="1.5" height="28"/>
+                        <rect x="80.92" y="0" width="1" height="28"/>
+                        <rect x="86.42" y="0" width="2" height="28"/>
+                        <rect x="91.33" y="0" width="1" height="28"/>
+                        <rect x="95.25" y="0" width="1.5" height="28"/>
+                        <rect x="101.75" y="0" width="2.5" height="28"/>
+                        <rect x="107.17" y="0" width="1" height="28"/>
+                        <rect x="111.08" y="0" width="1.5" height="28"/>
+                        <rect x="115.5" y="0" width="2" height="28"/>
+                </svg>
+            </div>
         </footer>
     </div>
 
